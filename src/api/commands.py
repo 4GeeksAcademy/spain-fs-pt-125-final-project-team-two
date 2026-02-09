@@ -1,6 +1,6 @@
 
 import click
-from api.models import db, User
+from api.models import db, User, Skill
 
 """
 In this file, you can add as many commands as you want using the @app.cli.command decorator
@@ -32,3 +32,54 @@ def setup_commands(app):
     @app.cli.command("insert-test-data")
     def insert_test_data():
         pass
+
+
+    #---------------------------------------------------------------
+    @app.cli.command("setup-skillbank-data")
+    def setup_skillbank_data():
+        print("Creando usuarios iniciales de skillBank...")
+
+        users_data = [
+            {"name": "Benji", "email": "benji@skillbank.com"},
+            {"name": "Miguelangel", "email": "miguelangel@skillbank.com"},
+            {"name": "Crystian", "email": "crystian@skillbank.com"},
+            {"name": "Andri", "email": "andri@skillbank.com"}
+        ]
+
+        users = []
+
+        for u in users_data:
+            user = User(
+                name=u["name"],
+                email=u["email"],
+                wallet_credits=20,
+                is_active=True
+            )
+            user.password = "password123"
+
+            db.session.add(user)
+            users.append(user)
+        
+        db.session.commit()
+
+        print("Usuarios iniciales de skillBank creados exitosamente.")
+
+        skills_examples = [
+            ["Clase de React", "Mentoría de JavaScript"],
+            ["Asesoría de cocina", "Recetas saludables"],
+            ["Clases de inglés", "Conversación avanzada"],
+            ["Entrenamiento personal", "Plan de nutrición"]
+        ]
+
+        for user, skills in zip(users, skills_examples):
+            for skill_name in skills:
+                skill = Skill(
+                    title=skill_name,
+                    description=f"Descripción de {skill_name}",
+                    user_id=user.id
+                )
+                db.session.add(skill)
+
+        db.session.commit()
+
+        print("SkillBank inicializado con 4 usuarios y sus skills.")
