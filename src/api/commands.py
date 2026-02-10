@@ -1,85 +1,47 @@
-
 import click
-from api.models import db, User, Skill
+from api.models import db, User, Skill, Exchange
 
-"""
-In this file, you can add as many commands as you want using the @app.cli.command decorator
-Flask commands are usefull to run cronjobs or tasks outside of the API but sill in integration 
-with youy database, for example: Import the price of bitcoin every night as 12am
-"""
+
 def setup_commands(app):
     
-    """ 
-    This is an example command "insert-test-users" that you can run from the command line
-    by typing: $ flask insert-test-users 5
-    Note: 5 is the number of users to add
-    """
-    @app.cli.command("insert-test-users") # name of our command
-    @click.argument("count") # argument of out command
-    def insert_test_users(count):
-        print("Creating test users")
-        for x in range(1, int(count) + 1):
-            user = User()
-            user.email = "test_user" + str(x) + "@test.com"
-            user.password = "123456"
-            user.is_active = True
-            db.session.add(user)
-            db.session.commit()
-            print("User: ", user.email, " created.")
-
-        print("All test users created")
-
-    @app.cli.command("insert-test-data")
-    def insert_test_data():
-        pass
-
-
-    #---------------------------------------------------------------
     @app.cli.command("setup-skillbank-data")
     def setup_skillbank_data():
-        print("Creando usuarios iniciales de skillBank...")
+        print("Iniciando carga de datos SkillBank")
 
-        users_data = [
-            {"name": "Benji", "email": "benji@skillbank.com"},
-            {"name": "Miguelangel", "email": "miguelangel@skillbank.com"},
-            {"name": "Crystian", "email": "crystian@skillbank.com"},
-            {"name": "Andri", "email": "andri@skillbank.com"}
-        ]
+        # 1. Limpieza total
+        try:
+            db.session.query(Exchange).delete()
+            db.session.query(Skill).delete()
+            db.session.query(User).delete()
+            db.session.commit()
+            print("DB limpia.")
+        except Exception as e:
+            print(f"Error limpiando: {e}")
+            db.session.rollback()
 
-        users = []
-
-        for u in users_data:
-            user = User(
-                name=u["name"],
-                email=u["email"],
-                wallet_credits=20,
-                is_active=True
-            )
-            user.password = "password123"
-
-            db.session.add(user)
-            users.append(user)
+        # 2. Usuarios (20 créditos cada uno)
+        u1 = User(email="benji@test.com", password="password123", name="Benji", wallet_credits=20)
+        u2 = User(email="miguel@test.com", password="password123", name="Miguel", wallet_credits=20)
+        u3 = User(email="crys@test.com", password="password123", name="Crystian", wallet_credits=20)
+        u4 = User(email="andri@test.com", password="password123", name="Andri", wallet_credits=20)
         
+        db.session.add_all([u1, u2, u3, u4])
         db.session.commit()
+        print("Usuarios creados con 20 créditos.")
 
-        print("Usuarios iniciales de skillBank creados exitosamente.")
-
-        skills_examples = [
-            ["Clase de React", "Mentoría de JavaScript"],
-            ["Asesoría de cocina", "Recetas saludables"],
-            ["Clases de inglés", "Conversación avanzada"],
-            ["Entrenamiento personal", "Plan de nutrición"]
-        ]
-
-        for user, skills in zip(users, skills_examples):
-            for skill_name in skills:
-                skill = Skill(
-                    title=skill_name,
-                    description=f"Descripción de {skill_name}",
-                    user_id=user.id
-                )
-                db.session.add(skill)
-
+        # 3. Skills (1 crédito por hora)
+        s1 = Skill(title="React Avanzado", description="Hooks y Context", category="Programación", credits_per_hour=1, owner=u1)
+        s2 = Skill(title="Arquitectura Flask", description="Backend Senior", category="Programación", credits_per_hour=1, owner=u3)
+        
+        db.session.add_all([s1, s2])
         db.session.commit()
+        print("Skills creadas.")
 
-        print("SkillBank inicializado con 4 usuarios y sus skills.")
+        # 4. Intercambios (1 crédito transferido)
+        e1 = Exchange(provider=u3, receiver=u1, skill=s2, credits_transferred=1, status="accepted")
+        e2 = Exchange(provider=u1, receiver=u3, skill=s1, credits_transferred=1, status="pending")
+        
+        db.session.add_all([e1, e2])
+        db.session.commit()
+        
+        print("¡Intercambios creados y carga completada con éxito!")
