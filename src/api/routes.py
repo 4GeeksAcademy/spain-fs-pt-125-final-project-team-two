@@ -65,9 +65,9 @@ def handle_signup():
 
     new_user = User(
         email=body["email"],
-        password=body["password"], # En un proyecto real usaríamos hash
+        password=body["password"],
         name=body["name"],
-        wallet_credits=20, # <--- ¡Aquí está la magia de los 20 créditos!
+        wallet_credits=20, 
         is_active=True
     )
 
@@ -76,7 +76,7 @@ def handle_signup():
 
     return jsonify({"msg": "Usuario creado con 20 créditos de regalo"}), 201
 
-# 2. Login: Genera el token para que el usuario pueda publicar skills
+# LOGIN Genera el token para que el usuario pueda publicar skills
 @api.route('/login', methods=['POST'])
 def handle_login():
     body = request.get_json()
@@ -98,7 +98,7 @@ def handle_login():
         "credits": user.wallet_credits
     }), 200
 
-# 3. Publicar Skill: El formulario donde el usuario pone "Inglés", etc.
+# PUBLICAr SKILL o HABILIDAD
 @api.route('/skills', methods=['POST'])
 @jwt_required()
 def add_skill():
@@ -112,8 +112,8 @@ def add_skill():
         title=body["title"],
         description=body.get("description", ""),
         category=body.get("category", "Otros"),
-        credits_per_hour=1, # Por defecto 1 crédito
-        user_id=current_user_id # La vinculamos al usuario logueado
+        credits_per_hour=1, # Por defecto 1 crédito SIEMPRE por desicion del equipo
+        user_id=current_user_id # Vinculacion al usuario logueado
     )
 
     db.session.add(new_skill)
