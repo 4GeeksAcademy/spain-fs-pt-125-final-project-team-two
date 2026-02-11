@@ -12,14 +12,16 @@ function PostModal({ show, onClose, onConfirm, title, description, img, user }) 
         <div className="modal-content">
 
           <div className="modal-header">
-            <h5 className="modal-title">{title}</h5>
+            <h5 className="modal-title">{title || "Título del post"}</h5>
             <button className="btn-close" onClick={onClose}></button>
           </div>
 
           <div className="modal-body">
-            <img src={img} alt={title} className="img-fluid mb-3" />
-            <p><strong>{user}</strong></p>
-            <p>{description}</p>
+            {img && (
+              <img src={img} alt={title} className="img-fluid mb-3" />
+            )}
+            {user && <p><strong>{user}</strong></p>}
+            <p>{description || "Descripción del contenido...PROBANDO"}</p>
           </div>
 
           <div className="modal-footer">
