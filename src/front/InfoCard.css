@@ -1,0 +1,47 @@
+.skillbank-card {
+  background: radial-gradient(circle at top left, #111827, #020617);
+  border-radius: 18px;
+  overflow: hidden;
+  color: #e5e7eb;
+  transition: transform 150ms ease, box-shadow 200ms ease;
+  max-width: 420px;
+}
+
+.skillbank-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.45);
+}
+
+.card-img-wrapper {
+  height: 180px;
+  overflow: hidden;
+}
+
+.card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.card-body {
+  padding: 1rem 1.2rem;
+}
+
+.card-title {
+  color: #f9fafb;
+  margin-bottom: 0.5rem;
+}
+
+.card-text {
+  color: #cbd5e1;
+  font-size: 0.9rem;
+}
+
+.card-user {
+  color: #22c55e;
+}
+
+.card-updated {
+  color: #94a3b8;
+  font-size: 0.75rem;
+}
