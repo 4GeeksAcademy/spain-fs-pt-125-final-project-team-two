@@ -87,6 +87,7 @@
   color: #f9fafb !important;
   caret-color: #f9fafb;
   padding-inline: 0.9rem;
+  margin-right: 0.55rem;
   box-shadow: 0 0 0 0 rgba(56, 189, 248, 0);
   transition: box-shadow 180ms ease, border-color 160ms ease,
     background-color 160ms ease, transform 120ms ease;
