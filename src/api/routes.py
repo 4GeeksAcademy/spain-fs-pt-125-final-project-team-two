@@ -146,7 +146,50 @@ def update_skill(skill_id):
     if not skill:
         return jsonify({"error": "Skill not found"}), 404
 
+    # Verificar que la skill pertenece al usuario autenticado
     if skill.user_id != int(user_id):
         return jsonify({"error": "Esta habilidad no pertenece al usuario"}), 403
 
-    # Aquí iría la actualización de los campos...
+    # Leer datos del JSON
+    new_title = request.json.get("title")
+    new_description = request.json.get("description")
+    new_category = request.json.get("category")
+    new_credits_per_hour = request.json.get("credits_per_hour")
+
+    # Actualizar campos si vienen en el JSON
+    if new_title:
+        skill.title = new_title
+
+    if new_description:
+        skill.description = new_description
+
+    if new_category:
+        skill.category = new_category
+
+    if new_credits_per_hour:
+        skill.credits_per_hour = new_credits_per_hour
+
+    # Guardar cambios
+    db.session.commit()
+
+    # Devolver la skill actualizada
+    return jsonify(skill.serialize()), 200
+
+
+@api.route('/skills/<int:skill_id>', methods=['DELETE'])
+@jwt_required()
+def delete_skill(skill_id):
+    user_id = get_jwt_identity()
+    skill = Skill.query.get(skill_id)
+
+    if not skill:
+        return jsonify({"error": "Skill not found"}), 404
+
+    # Verificar que la skill pertenece al usuario autenticado
+    if skill.user_id != int(user_id):
+        return jsonify({"error": "Esta habilidad no pertenece al usuario"}), 403
+
+    db.session.delete(skill)
+    db.session.commit()
+
+    return jsonify({"msg": "Habilidad eliminada correctamente"}), 200
