@@ -3,6 +3,10 @@
   background-color: #f8f9fa;
 }
 
+.btn {
+  border-radius: 999px !important;
+}
+
 .skillbank-navbar {
   backdrop-filter: blur(12px);
   background: radial-gradient(circle at top left, #111827, #020617) !important;
