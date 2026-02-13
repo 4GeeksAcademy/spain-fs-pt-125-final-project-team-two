@@ -146,7 +146,7 @@ def update_skill(skill_id):
     if not skill:
         return jsonify({"error": "Skill not found"}), 404
 
-    if __________________________________________:
+    if skill.user_id != int(user_id):
         return jsonify({"error": "Esta habilidad no pertenece al usuario"}), 403
 
     # Aquí iría la actualización de los campos...
