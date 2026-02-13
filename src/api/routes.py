@@ -6,6 +6,7 @@ from api.models import db, User, Skill
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
+from werkzeug.security import generate_password_hash, check_password_hash
 
 api = Blueprint('api', __name__)
 
@@ -13,6 +14,7 @@ api = Blueprint('api', __name__)
 CORS(api)
 
 # Andri
+
 
 @api.route('/users', methods=['GET'])
 def get_users():
@@ -27,7 +29,7 @@ def get_user(id):
 
     if not user:
         return jsonify({"error": "User not found"}), 404
-    
+
     return jsonify(user.serialize()), 200
 
 
@@ -38,23 +40,15 @@ def get_skills():
     return jsonify([skill.serialize() for skill in skills]), 200
 
 
+# =========================================================
+# BLOQUE 1: CRYS - SEGURIDAD Y ACCIÓN
+# =========================================================
 
-
-
-
-
-
-
-
-
-# CRYS (Lógica de Acción y Seguridad)
-
-
-# 1. Registro: Todo usuario nuevo empieza con 20 créditos
+# 1. Registro: Todo usuario nuevo empieza con 20 créditos y password encriptada
 @api.route('/signup', methods=['POST'])
 def handle_signup():
     body = request.get_json()
-    
+
     if not body or "email" not in body or "password" not in body or "name" not in body:
         return jsonify({"msg": "Faltan datos (email, password, name)"}), 400
 
@@ -63,11 +57,14 @@ def handle_signup():
     if user_exists:
         return jsonify({"msg": "El email ya está registrado"}), 400
 
+    # Encriptamos la contraseña antes de guardarla
+    password_hash = generate_password_hash(body["password"])
+
     new_user = User(
         email=body["email"],
-        password=body["password"],
+        password=password_hash, # Guardamos el hash, no el texto plano
         name=body["name"],
-        wallet_credits=20, 
+        wallet_credits=20,
         is_active=True
     )
 
@@ -76,21 +73,23 @@ def handle_signup():
 
     return jsonify({"msg": "Usuario creado con 20 créditos de regalo"}), 201
 
-# LOGIN Genera el token para que el usuario pueda publicar skills
+# 2. LOGIN: Compara el hash y genera el token
 @api.route('/login', methods=['POST'])
 def handle_login():
     body = request.get_json()
     email = body.get("email")
     password = body.get("password")
 
-    user = User.query.filter_by(email=email, password=password).first()
+    # Buscamos al usuario por email
+    user = User.query.filter_by(email=email).first()
 
-    if not user:
+    # Verificamos que el usuario existe y que el hash de la contraseña coincide
+    if not user or not check_password_hash(user.password, password):
         return jsonify({"msg": "Usuario o contraseña incorrectos"}), 401
 
     # Creamos el token usando el ID del usuario como identidad
     access_token = create_access_token(identity=str(user.id))
-    
+
     return jsonify({
         "token": access_token,
         "user_id": user.id,
@@ -98,7 +97,7 @@ def handle_login():
         "credits": user.wallet_credits
     }), 200
 
-# PUBLICAr SKILL o HABILIDAD
+# 3. PUBLICAR SKILL: Vinculado al usuario logueado
 @api.route('/skills', methods=['POST'])
 @jwt_required()
 def add_skill():
@@ -112,8 +111,8 @@ def add_skill():
         title=body["title"],
         description=body.get("description", ""),
         category=body.get("category", "Otros"),
-        credits_per_hour=1, # Por defecto 1 crédito SIEMPRE por desicion del equipo
-        user_id=current_user_id # Vinculacion al usuario logueado
+        credits_per_hour=1,  # Siempre 1 por decisión de equipo
+        user_id=current_user_id  # Vinculación automática por Token
     )
 
     db.session.add(new_skill)
