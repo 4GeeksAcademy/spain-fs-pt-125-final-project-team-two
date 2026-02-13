@@ -13,6 +13,12 @@ api = Blueprint('api', __name__)
 # Allow CORS requests to this API
 CORS(api)
 
+
+
+
+
+
+
 # Andri
 
 
@@ -194,7 +200,6 @@ def add_skill():
     new_skill = Skill(
         title=body["title"],
         description=body.get("description", ""),
-        category=category,
         credits_per_hour=1, # Por acuerdo de equipo
         image_url=unsplash_url, # Foto automática para que el Front se vea BIEN
         user_id=current_user_id
@@ -203,7 +208,82 @@ def add_skill():
     db.session.add(new_skill)
     db.session.commit()
 
-    return jsonify({"msg": "Habilidad publicada", "skill": new_skill.serialize()}), 201
+    return jsonify({"msg": "Habilidad publicada correctamente", "skill": new_skill.serialize()}), 201
+
+
+
+
+
+
+
+
+#Andri Gestion de Datos
+@api.route('/users/profile', methods=['GET'])
+@jwt_required()
+def get_profile():
+    user_id = get_jwt_identity()
+
+    user = User.query.get(user_id)
+
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+    
+    return jsonify(user.serialize()), 200
+
+
+@api.route('/skills/<int:skill_id>', methods=['PUT'])
+@jwt_required()
+def update_skill(skill_id):
+    user_id = get_jwt_identity()
+    skill = Skill.query.get(skill_id)
+
+    if not skill:
+        return jsonify({"error": "Skill not found"}), 404
+
+    # Verificar que la skill pertenece al usuario autenticado
+    if skill.user_id != int(user_id):
+        return jsonify({"error": "Esta habilidad no pertenece al usuario"}), 403
+
+    # Leer datos del JSON
+    new_title = request.json.get("title")
+    new_description = request.json.get("description")
+    new_credits_per_hour = request.json.get("credits_per_hour")
+
+    # Actualizar campos si vienen en el JSON
+    if new_title:
+        skill.title = new_title
+
+    if new_description:
+        skill.description = new_description
+
+    if new_credits_per_hour:
+        skill.credits_per_hour = new_credits_per_hour
+
+    # Guardar cambios
+    db.session.commit()
+
+    # Devolver la skill actualizada
+    return jsonify(skill.serialize()), 200
+
+
+@api.route('/skills/<int:skill_id>', methods=['DELETE'])
+@jwt_required()
+def delete_skill(skill_id):
+    user_id = get_jwt_identity()
+    skill = Skill.query.get(skill_id)
+
+    if not skill:
+        return jsonify({"error": "Skill not found"}), 404
+
+    # Verificar que la skill pertenece al usuario autenticado
+    if skill.user_id != int(user_id):
+        return jsonify({"error": "Esta habilidad no pertenece al usuario"}), 403
+
+    db.session.delete(skill)
+    db.session.commit()
+
+    return jsonify({"msg": "Habilidad eliminada correctamente"}), 200
+
 
 
 # 4. TRANSACCIÓN: LOGICA DE INTERCAMBIO DE CREDITOS POR TIEMPO EN HBILIDAD

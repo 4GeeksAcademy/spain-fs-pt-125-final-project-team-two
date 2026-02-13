@@ -42,7 +42,6 @@ class Skill(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     title: Mapped[str] = mapped_column(String(100), nullable=False)
     description: Mapped[str] = mapped_column(Text, nullable=False)
-    category: Mapped[str] = mapped_column(String(50), nullable=False)
     credits_per_hour: Mapped[int] = mapped_column(Integer, nullable=False)
     
     user_id: Mapped[int] = mapped_column(ForeignKey('user.id'), nullable=False)
@@ -56,7 +55,6 @@ class Skill(db.Model):
             "id": self.id,
             "title": self.title,
             "description": self.description,
-            "category": self.category,
             "credits_per_hour": self.credits_per_hour,
             "user_id": self.user_id
         }
