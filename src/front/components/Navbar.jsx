@@ -4,8 +4,7 @@ import './../../front/Navbar.css'
 export const Navbar = () => {
 
 	return (
-		<div className="app-root">
-      <nav className="navbar navbar-expand-lg navbar-dark skillbank-navbar shadow-sm">
+		<nav className="navbar navbar-expand-lg navbar-dark skillbank-navbar shadow-sm">
         <div className="container-fluid">
           <a className="navbar-brand fw-semibold" href="#">
             <span className="brand-pill">SkillBank</span>
@@ -54,6 +53,6 @@ export const Navbar = () => {
           </div>
         </div>
       </nav>
-    </div>
+    
 	);
 };
