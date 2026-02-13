@@ -3,6 +3,7 @@ import rigoImageUrl from "../assets/img/rigo-baby.jpg";
 import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
 import SkillBankBanner  from "../components/SkillBankBanner.jsx";
 import SkillBankAbout from "../components/SkillBankAbout.jsx"
+import SkillBankHowItWork from "../components/SkillBankHowItWork.jsx"
 
 
 
@@ -41,6 +42,7 @@ export const Home = () => {
     <div>
         <SkillBankBanner />
         <SkillBankAbout />
+        <SkillBankHowItWork />
     </div>
   );
 };
