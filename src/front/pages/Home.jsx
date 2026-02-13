@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import rigoImageUrl from "../assets/img/rigo-baby.jpg";
 import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
-import SkillBankBanner  from "../components/SkillBankBanner.jsx";
+import SkillBankBanner from "../components/SkillBankBanner.jsx";
 
 
 import InfoCard from "../components/InfoCard.jsx";
@@ -26,7 +26,7 @@ export const Home = () => {
     } catch (error) {
       if (error.message) throw new Error(
         `Could not fetch the message from the backend.
-        Please check if the backend is running and the backend port is public.`
+         Please check if the backend is running and the backend port is public.`
       );
     }
   };
@@ -36,8 +36,8 @@ export const Home = () => {
   }, []);
 
   return (
-    <div>
-        <SkillBankBanner />
+    <div className="container">
+      <SkillBankBanner />
     </div>
   );
 };
