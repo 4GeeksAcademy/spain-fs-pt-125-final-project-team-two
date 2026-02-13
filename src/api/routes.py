@@ -120,3 +120,9 @@ def add_skill():
     db.session.commit()
 
     return jsonify({"msg": "Habilidad publicada correctamente", "skill": new_skill.serialize()}), 201
+
+
+
+#Andri Gestion de Datos
+@api.route('/users/profile', methods=['GET'])
+@jwt_required()
