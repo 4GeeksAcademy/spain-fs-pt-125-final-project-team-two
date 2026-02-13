@@ -134,4 +134,19 @@ def get_profile():
     if not user:
         return jsonify({'error': 'User not found'}), 404
     
-    return jsonify(user.serialize()),200
+    return jsonify(user.serialize()), 200
+
+
+@api.route('/skills/<int:skill_id>', methods=['PUT'])
+@jwt_required()
+def update_skill(skill_id):
+    user_id = get_jwt_identity()
+    skill = Skill.query.get(skill_id)
+
+    if not skill:
+        return jsonify({"error": "Skill not found"}), 404
+
+    if __________________________________________:
+        return jsonify({"error": "Esta habilidad no pertenece al usuario"}), 403
+
+    # Aquí iría la actualización de los campos...
