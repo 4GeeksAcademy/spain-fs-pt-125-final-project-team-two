@@ -12,6 +12,12 @@ api = Blueprint('api', __name__)
 # Allow CORS requests to this API
 CORS(api)
 
+
+
+
+
+
+
 # Andri
 
 @api.route('/users', methods=['GET'])
@@ -36,11 +42,6 @@ def get_skills():
     skills = Skill.query.all()
 
     return jsonify([skill.serialize() for skill in skills]), 200
-
-
-
-
-
 
 
 
@@ -111,7 +112,6 @@ def add_skill():
     new_skill = Skill(
         title=body["title"],
         description=body.get("description", ""),
-        category=body.get("category", "Otros"),
         credits_per_hour=1, # Por defecto 1 crédito SIEMPRE por desicion del equipo
         user_id=current_user_id # Vinculacion al usuario logueado
     )
@@ -120,6 +120,11 @@ def add_skill():
     db.session.commit()
 
     return jsonify({"msg": "Habilidad publicada correctamente", "skill": new_skill.serialize()}), 201
+
+
+
+
+
 
 
 
@@ -153,7 +158,6 @@ def update_skill(skill_id):
     # Leer datos del JSON
     new_title = request.json.get("title")
     new_description = request.json.get("description")
-    new_category = request.json.get("category")
     new_credits_per_hour = request.json.get("credits_per_hour")
 
     # Actualizar campos si vienen en el JSON
@@ -162,9 +166,6 @@ def update_skill(skill_id):
 
     if new_description:
         skill.description = new_description
-
-    if new_category:
-        skill.category = new_category
 
     if new_credits_per_hour:
         skill.credits_per_hour = new_credits_per_hour
