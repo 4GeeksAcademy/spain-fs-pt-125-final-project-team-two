@@ -126,3 +126,12 @@ def add_skill():
 #Andri Gestion de Datos
 @api.route('/users/profile', methods=['GET'])
 @jwt_required()
+def get_profile():
+    user_id = get_jwt_identity()
+
+    user = User.query.get(user_id)
+
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+    
+    return jsonify(user.serialize()),200
