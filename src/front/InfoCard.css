@@ -5,6 +5,7 @@
   color: #e5e7eb;
   transition: transform 150ms ease, box-shadow 200ms ease;
   max-width: 420px;
+  margin-bottom: 1.5rem;
 }
 
 .skillbank-card:hover {
