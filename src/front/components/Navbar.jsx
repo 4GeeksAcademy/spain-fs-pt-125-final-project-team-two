@@ -1,7 +1,10 @@
 import { Link } from "react-router-dom";
+import useGlobalReducer from '../hooks/useGlobalReducer'
 import "./../../front/Navbar.css";
 
 export const Navbar = ({ onOpenRegister }) => {
+
+  const {store, dispatch} = useGlobalReducer();
   return (
     <nav className="navbar navbar-expand-lg navbar-dark skillbank-navbar shadow-sm">
       <div className="container-fluid">
@@ -37,17 +40,36 @@ export const Navbar = ({ onOpenRegister }) => {
           </form>
 
           <div className="d-flex gap-2 auth-buttons">
-            <button className="btn btn-outline-light btn-sm btn-ghost" type="button">
-              Login
-            </button>
+            {!store.token ? (
+              <>
+                <button className="btn btn-outline-light btn-sm btn-ghost" type="button">
+                  Login
+                </button>
 
-            <button
-              className="btn btn-primary btn-sm btn-pill"
-              type="button"
-              onClick={onOpenRegister}
-            >
-              Register
-            </button>
+                <button
+                  className="btn btn-primary btn-sm btn-pill"
+                  type="button"
+                  onClick={onOpenRegister}
+                >
+                  Register
+                </button>
+              </>
+            ) : (
+              <>
+                <Link to="/profile">
+                  <button className="btn btn-outline-light btn-sm btn-ghost" type="button">
+                    Mi Perfil
+                  </button>
+                </Link>
+                <button
+                  className="btn btn-danger btn-sm btn-pill"
+                  type="button"
+                  onClick={() => dispatch({ type: 'logout' })}
+                >
+                  Logout
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>
