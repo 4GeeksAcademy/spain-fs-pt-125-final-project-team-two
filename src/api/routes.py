@@ -7,6 +7,7 @@ from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from werkzeug.security import generate_password_hash, check_password_hash
+import os
 
 api = Blueprint('api', __name__)
 
@@ -131,23 +132,31 @@ def get_skills():
 def handle_signup():
     body = request.get_json()
 
-    # Validamos que no falte nada básico
+    # Validamos datos obligatorios
     if not body or "email" not in body or "password" not in body or "name" not in body:
-        return jsonify({"msg": "Faltan datos (email, password, name)"}), 400
+        return jsonify({"msg": "Faltan datos obligatorios (email, password, name)"}), 400
 
-    # Comprobamos si elusuario ya se registro
+    # Lógica de confirmación de contraseña (lo que pidió el Front)
+    confirm_password = body.get("confirm_password")
+    if confirm_password and body["password"] != confirm_password:
+        return jsonify({"msg": "Las contraseñas no coinciden"}), 400
+
+    # Comprobamos si el usuario ya existe
     user_exists = User.query.filter_by(email=body["email"]).first()
     if user_exists:
         return jsonify({"msg": "El email ya está registrado"}), 400
 
-    # SEGURIDAD: Encriptamos la clave para que nadie la vea en la DB
+    # SEGURIDAD: Encriptamos la clave
     password_hash = generate_password_hash(body["password"])
 
+    # Creamos el nuevo usuario con los campos extra que pidió el Front
     new_user = User(
         email=body["email"],
-        password=password_hash, # Aca se guarda hash seguro 
+        password=password_hash,
         name=body["name"],
-        wallet_credits=20, # creditos de registro 
+        bio=body.get("bio", ""), # Si no mandan bio, queda vacío
+        avatar_url=body.get("avatar_url", ""), # Recibimos la URL de la foto que manden
+        wallet_credits=20,
         is_active=True
     )
 
