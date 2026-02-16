@@ -48,12 +48,16 @@ export const Profile = () => {
 
           <h1 className="profile-name">{userData.name}</h1>
           <p className="profile-email">{userData.email}</p>
+          
+          <p className="profile-credits">
+            Créditos disponibles: <span>{userData.wallet_credits}</span>
+          </p>
 
           <p className="profile-bio">{userData.description}</p>
         </div>
       </div>
 
-      {/* Modal reutilizable */}
+      {/* Modal */}
       {open && (
         <div className="modal-overlay">
           <div className="modal-content">
