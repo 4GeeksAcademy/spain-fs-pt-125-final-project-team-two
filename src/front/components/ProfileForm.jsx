@@ -108,7 +108,7 @@ export const ProfileForm = ({ user = {}, onSubmit }) => {
         <input
           type="password"
           name="password"
-          placeholder="Déjalo vacío si no quieres cambiarla"
+          placeholder="******"
         />
       </div>
 
@@ -117,7 +117,7 @@ export const ProfileForm = ({ user = {}, onSubmit }) => {
         <input
           type="password"
           name="confirm_password"
-          placeholder="Déjalo vacío si no quieres cambiarla"
+          placeholder="******"
         />
       </div>
 
