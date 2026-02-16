@@ -1,14 +1,16 @@
+import { useState } from "react";
 import { ProfileForm } from "../components/ProfileForm";
 import useGlobalReducer from "../hooks/useGlobalReducer";
 
 export const Profile = () => {
   const { store, dispatch } = useGlobalReducer();
+  const [open, setOpen] = useState(false);
 
   // Datos del usuario desde el store global
   const userData = store.user || {
     name: "Benjamin",
     email: "benjamin@example.com",
-    description: "Desquiciado a tiempo completo",
+    description: "Aqui puedes dejar tu informacion, lo que los usuarios deberian saber de ti.",
   };
 
   const handleSubmit = (e) => {
@@ -22,23 +24,46 @@ export const Profile = () => {
       description: formData.get("description"),
     };
 
-    // Guardar en el store global
     dispatch({
       type: "SET_USER",
       payload: updatedUser,
     });
 
-    console.log("Perfil actualizado:", updatedUser);
+    setOpen(false);
   };
 
   return (
-    <div className="container mt-4">
-      <h2 className="mb-4">Mi perfil</h2>
+    <>
+      <div className="profile-page">
+        <button className="profile-edit-btn" onClick={() => setOpen(true)}>
+          <i className="fa-regular fa-pen-to-square"></i>
+        </button>
 
-      <ProfileForm
-        defaultValues={userData}
-        onSubmit={handleSubmit}
-      />
-    </div>
+        <div className="profile-content">
+          <img
+            src="ruta-de-tu-foto.jpg"
+            className="profile-avatar"
+            alt="Foto de perfil"
+          />
+
+          <h1 className="profile-name">{userData.name}</h1>
+          <p className="profile-email">{userData.email}</p>
+
+          <p className="profile-bio">{userData.description}</p>
+        </div>
+      </div>
+
+      {/* Modal reutilizable */}
+      {open && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <ProfileForm onSubmit={handleSubmit} user={userData} />
+            <button className="modal-close" onClick={() => setOpen(false)}>
+              Cerrar
+            </button>
+          </div>
+        </div>
+      )}
+    </>
   );
 };

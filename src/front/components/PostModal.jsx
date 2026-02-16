@@ -1,7 +1,16 @@
 import React from "react";
 import "./../../front/PostModal.css";
 
-function PostModal({ show, onClose, onConfirm, title, description, img, user }) {
+function PostModal({ 
+  show, 
+  onClose, 
+  onConfirm, 
+  title, 
+  description, 
+  img, 
+  user,
+  creditsPerHour 
+}) {
   if (!show) return null;
 
   return (
@@ -15,11 +24,21 @@ function PostModal({ show, onClose, onConfirm, title, description, img, user }) 
 
         <div className="modal-body">
           {img && <img src={img} alt={title} className="modal-img" />}
-          <p className="modal-user"><strong>{user}</strong></p>
+
+          {/* Usuario */}
+          <p className="modal-user">
+            <strong>{user}</strong>
+          </p>
+
+          {/* Créditos por hora */}
+          <p className="modal-credits">
+            <strong>{creditsPerHour} créditos</strong>
+          </p>
+
           <p className="modal-description">{description}</p>
         </div>
 
-        <div className="modal-footer">
+        <div className="modal-footer mt-1">
           <button className="btn btn-ghost" onClick={onClose}>Cancelar</button>
           <button className="btn btn-pill" onClick={onConfirm}>Confirmar</button>
         </div>

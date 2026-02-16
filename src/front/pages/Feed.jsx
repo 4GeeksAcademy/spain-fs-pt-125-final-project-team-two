@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import useGlobalReducer from "../hooks/useGlobalReducer";
 import InfoCard from "../components/InfoCard";
 
 export const Feed = () => {
@@ -17,6 +16,7 @@ export const Feed = () => {
             img="https://picsum.photos/300/200"
             user="Carlos Pérez"
             updatedAt="hace 2 días"
+            creditsPerHour={3}
           />
         </div>
 
@@ -28,6 +28,7 @@ export const Feed = () => {
             img="https://picsum.photos/300/201"
             user="Laura Gómez"
             updatedAt="hace 5 horas"
+            creditsPerHour={5}
           />
         </div>
 
@@ -39,6 +40,7 @@ export const Feed = () => {
             img="https://picsum.photos/300/202"
             user="Ana Torres"
             updatedAt="ayer"
+            creditsPerHour={4}
           />
         </div>
 

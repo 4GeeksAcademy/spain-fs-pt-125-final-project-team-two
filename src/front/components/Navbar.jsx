@@ -23,11 +23,11 @@ export const Navbar = () => {
 
           <div className="collapse navbar-collapse navbar-animate" id="navbarSkillBank">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-              <li className="nav-item">
+             {/* <li className="nav-item">
                 <a className="nav-link active nav-link-underline" aria-current="page" href="#">
                   Cursos
                 </a>
-              </li>
+              </li> */}
             </ul>
 
             <form className="d-flex me-3 search-wrapper" role="search">

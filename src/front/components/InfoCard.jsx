@@ -2,7 +2,15 @@ import React, { useState } from "react";
 import PostModal from "./PostModal";
 import "./../../front/InfoCard.css";
 
-function InfoCard({ title, shortText, fullText, img, user, updatedAt }) {
+function InfoCard({ 
+  title, 
+  shortText, 
+  fullText, 
+  img, 
+  user, 
+  updatedAt,
+  creditsPerHour 
+}) {
   const [showModal, setShowModal] = useState(false);
 
   return (
@@ -17,16 +25,24 @@ function InfoCard({ title, shortText, fullText, img, user, updatedAt }) {
 
           <p className="card-text">{shortText}</p>
 
+          
+          <p className="card-credits">
+            <strong>{creditsPerHour} créditos </strong>
+          </p>
+
+          
           <p className="card-user mt-2">
             <strong>{user}</strong>
           </p>
-          <button className="btn btn-primary btn-pill w-100" onClick={() => setShowModal(true)}>
+
+          <button 
+            className="btn btn-primary btn-pill w-100" 
+            onClick={() => setShowModal(true)}
+          >
             Ver más
           </button>
 
-
-
-          <p className="card-updated">
+          <p className="card-updated mt-3">
             <small>Actualizado {updatedAt}</small>
           </p>
         </div>
@@ -40,6 +56,7 @@ function InfoCard({ title, shortText, fullText, img, user, updatedAt }) {
         description={fullText}
         img={img}
         user={user}
+        creditsPerHour={creditsPerHour}
       />
     </>
   );

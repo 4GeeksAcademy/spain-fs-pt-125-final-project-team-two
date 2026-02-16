@@ -24,9 +24,9 @@ function SkillBankBanner() {
             </p>
 
             <div className="d-flex flex-wrap gap-3 mb-4">
-              <button className="btn btn-primary btn-lg btn-pill">
+             {/* <button className="btn btn-primary btn-lg btn-pill">
                 Explorar cursos
-              </button>
+              </button> */}
               <a
                 href="#como-funciona"
                 className="btn btn-outline-dark btn-lg btn-ghost-light"
