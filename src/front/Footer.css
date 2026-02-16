@@ -1,0 +1,128 @@
+.skillbank-footer {
+  background: radial-gradient(circle at top left, #020617, #020617);
+  border-top: 1px solid rgba(15, 23, 42, 0.85);
+  padding-block: 2.5rem;
+  color: #e5e7eb;
+}
+
+.skillbank-footer .container {
+  max-width: 1120px;
+}
+
+.footer-main {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.75rem;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.footer-brand {
+  max-width: 260px;
+}
+
+.footer-logo-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.22rem 0.85rem;
+  border-radius: 999px;
+  background: linear-gradient(120deg, #22c55e, #0ea5e9);
+  color: #020617;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  box-shadow: 0 10px 30px rgba(34, 197, 94, 0.3);
+}
+
+.footer-logo-dot {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 999px;
+  background: radial-gradient(circle at 30% 30%, #bbf7d0, #16a34a);
+  box-shadow: 0 0 10px rgba(74, 222, 128, 0.9);
+}
+
+.footer-text {
+  margin-top: 0.85rem;
+  font-size: 0.9rem;
+  color: #9ca3af;
+}
+
+.footer-links-title {
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: #6b7280;
+  margin-bottom: 0.65rem;
+}
+
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.footer-link-item a {
+  font-size: 0.9rem;
+  color: #e5e7eb;
+  text-decoration: none;
+  opacity: 0.9;
+  transition: opacity 140ms ease, transform 120ms ease, color 140ms ease;
+}
+
+.footer-link-item a:hover {
+  opacity: 1;
+  transform: translateX(2px);
+  color: #f9fafb;
+}
+
+.footer-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(31, 41, 55, 0.9);
+  font-size: 0.78rem;
+  color: #6b7280;
+}
+
+.footer-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  background-color: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(55, 65, 81, 0.95);
+}
+
+.footer-badge-dot {
+  width: 0.35rem;
+  height: 0.35rem;
+  border-radius: 999px;
+  background: radial-gradient(circle at 30% 30%, #22c55e, #16a34a);
+}
+
+.footer-badge-text {
+  font-size: 0.74rem;
+  color: #9ca3af;
+}
+
+.footer-rights {
+  color: #6b7280;
+}
+
+@media (max-width: 768px) {
+  .footer-main {
+    gap: 1.5rem;
+  }
+}
+
