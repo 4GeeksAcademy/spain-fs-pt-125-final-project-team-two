@@ -18,8 +18,8 @@ export const Layout = () => {
         name: data.name,
         email: data.email,
         password: data.password,
-        description: data.description,
-        avatar_url: data.avatar_url
+        bio: data.description,      
+        avatar_url: data.avatar_url 
       };
 
       const response = await fetch(`${API_URL}/api/signup`, {
