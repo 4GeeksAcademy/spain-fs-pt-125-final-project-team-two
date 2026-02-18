@@ -15,6 +15,7 @@ export const initialStore = () => {
     // UI global
     isPostModalOpen: false,
     isProfileDropdownOpen: false,
+    isLoginModalOpen: false
   };
 };
 
@@ -69,6 +70,18 @@ export default function storeReducer(store, action = {}) {
         ...store,
         isProfileDropdownOpen: !store.isProfileDropdownOpen,
       };
+
+    case "TOGGLE_LOGIN_MODAL":
+      return {
+        ...store,
+        isLoginModalOpen: !store.isLoginModalOpen
+      }
+
+    case "TOGGLE_LOGIN_MODAL":
+      return {
+        ...store,
+        isLoginModalOpen: !store.isLoginModalOpen
+      }
 
     default:
       throw Error("Unknown action.");
