@@ -56,7 +56,8 @@ class Skill(db.Model):
             "title": self.title,
             "description": self.description,
             "credits_per_hour": self.credits_per_hour,
-            "user_id": self.user_id
+            "user_id": self.user_id,
+            "user_name": self.owner.name
         }
 
 class Exchange(db.Model):
