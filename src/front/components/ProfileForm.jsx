@@ -1,14 +1,12 @@
 import { useState } from "react";
 import "../ProfileForm.css"; 
+
 export const ProfileForm = ({ user = {}, onSubmit }) => {
   const [preview, setPreview] = useState(user.avatar_url || "");
   const [errors, setErrors] = useState("");
 
-  const handleAvatarChange = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    const url = URL.createObjectURL(file);
+  const handleAvatarUrlChange = (e) => {
+    const url = e.target.value;
     setPreview(url);
   };
 
@@ -35,14 +33,11 @@ export const ProfileForm = ({ user = {}, onSubmit }) => {
       }
     }
 
-    const avatarFile = form.avatar_file.files[0];
-
     const updatedUser = {
       name: formData.get("name"),
       email: formData.get("email"),
       description: formData.get("description"),
-      avatar_url: preview,
-      avatar_file: avatarFile,
+      avatar_url: formData.get("avatar_url"),
       password: password || null,
     };
 
@@ -58,18 +53,18 @@ export const ProfileForm = ({ user = {}, onSubmit }) => {
       <div className="avatar-preview-wrapper">
         <img
           src={preview || "/default-avatar.png"}
-          alt="Avatar preview"
           className="avatar-preview"
         />
       </div>
 
       <div className="form-field">
-        <label>Subir nueva foto</label>
+        <label>URL de la imagen</label>
         <input
-          type="file"
-          name="avatar_file"
-          accept="image/*"
-          onChange={handleAvatarChange}
+          type="text"
+          name="avatar_url"
+          placeholder="https://imagen.com/avatar.png"
+          defaultValue={user.avatar_url || ""}
+          onChange={handleAvatarUrlChange}
         />
       </div>
 
