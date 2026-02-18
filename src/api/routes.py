@@ -82,7 +82,16 @@ def handle_signup():
     db.session.add(new_user)
     db.session.commit()
 
-    return jsonify({"msg": "Usuario creado con 20 créditos de regalo"}), 201
+    # Creamos el token con el ID del nuevo usuario
+    access_token = create_access_token(identity=str(new_user.id))
+
+    return jsonify({
+    "msg": "Usuario creado con 20 créditos de regalo",
+    "token": access_token,
+    "user_id": new_user.id,
+    "name": new_user.name,
+    "credits": new_user.wallet_credits
+}), 201
 
 
 # 2. LOGIN: Compara el hash y suelta el Token
