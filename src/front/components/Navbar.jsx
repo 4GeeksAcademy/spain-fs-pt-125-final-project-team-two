@@ -8,9 +8,11 @@ export const Navbar = ({ onOpenRegister }) => {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark skillbank-navbar shadow-sm">
       <div className="container-fluid">
+        <Link to="/">
         <a className="navbar-brand fw-semibold" href="#">
           <span className="brand-pill">SkillBank</span>
         </a>
+        </Link>
 
         <button
           className="navbar-toggler"
@@ -42,7 +44,7 @@ export const Navbar = ({ onOpenRegister }) => {
           <div className="d-flex gap-2 auth-buttons">
             {!store.token ? (
               <>
-                <button className="btn btn-outline-light btn-sm btn-ghost" type="button">
+                <button className="btn btn-outline-light btn-sm btn-ghost" type="button" onClick={() => dispatch({type: "TOGGLE_LOGIN_MODAL"})}>
                   Login
                 </button>
 

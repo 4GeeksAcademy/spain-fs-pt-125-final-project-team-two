@@ -6,6 +6,7 @@ import { Footer } from "../components/Footer";
 import { ProfileForm } from "../components/ProfileForm";
 import { API_URL } from "../../config.js";
 import useGlobalReducer from "../hooks/useGlobalReducer";
+import {LoginModal} from "../components/LoginModal.jsx"
 
 export const Layout = () => {
   const [openRegister, setOpenRegister] = useState(false);
@@ -70,6 +71,7 @@ export const Layout = () => {
       )}
 
       <Outlet />
+      <LoginModal />
       <Footer />
     </ScrollToTop>
   );

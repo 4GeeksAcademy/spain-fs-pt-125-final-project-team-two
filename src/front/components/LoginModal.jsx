@@ -1,0 +1,100 @@
+import React, { useState } from "react";
+import useGlobalReducer from "../hooks/useGlobalReducer";
+import "../ProfileForm.css"; 
+
+export const LoginModal = () => {
+    const { store, dispatch } = useGlobalReducer();
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [error, setError] = useState(null);
+
+    if (!store.isLoginModalOpen) return null;
+
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        setError(null);
+
+        try {
+            const resp = await fetch(import.meta.env.VITE_BACKEND_URL + "/api/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password }),
+            });
+
+            const data = await resp.json();
+
+            if (!resp.ok) throw new Error(data.msg);
+
+            dispatch({
+                type: "login_success",
+                payload: data,
+            });
+
+            dispatch({ type: "TOGGLE_LOGIN_MODAL" });
+
+        } catch (error) {
+            setError(error.message);
+        }
+    };
+
+    return (
+        
+        <div 
+            className="fixed-top w-100 h-100 d-flex justify-content-center align-items-center"
+            style={{ background: "rgba(15, 23, 42, 0.8)", zIndex: 1050}}
+            onClick={() => dispatch({ type: "TOGGLE_LOGIN_MODAL" })} 
+        >
+            <div 
+                className="p-4 rounded shadow-lg position-relative"
+                style={{ 
+                    backgroundColor: "#1e293b",
+                    width: "100%", 
+                    maxWidth: "420px",
+                    border: "1px solid rgba(148, 163, 184, 0.2)" 
+                }}
+                onClick={(e) => e.stopPropagation()}
+            >
+                <button
+                    className="btn-close btn-close-white position-absolute top-0 end-0 m-3"
+                    onClick={() => dispatch({ type: "TOGGLE_LOGIN_MODAL" })}
+                ></button>
+
+                <h2 className="text-center mb-4" style={{ color: "#f8fafc" }}>Bienvenido de nuevo</h2>
+                <form className="skillbank-form" onSubmit={handleLogin}>
+                    
+                    {error && (
+                        <div className="form-error text-center">
+                            ⚠️ {error}
+                        </div>
+                    )}
+
+                    <div className="form-field">
+                        <label>Email</label>
+                        <input
+                            type="email"
+                            placeholder="tu@email.com"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                        />
+                    </div>
+
+                    <div className="form-field">
+                        <label>Contraseña</label>
+                        <input
+                            type="password"
+                            placeholder="••••••••"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <button type="submit" className="form-submit mt-3">
+                        Iniciar Sesión
+                    </button>
+
+                </form>
+            </div>
+        </div>
+    );
+};
