@@ -15,11 +15,6 @@ api = Blueprint('api', __name__)
 CORS(api)
 
 
-
-
-
-
-
 # Andri
 
 
@@ -45,83 +40,6 @@ def get_skills():
     skills = Skill.query.all()
 
     return jsonify([skill.serialize() for skill in skills]), 200
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 # BLOQUE: CRYS - SEGURIDAD, ACCIÓN Y APIS EXTERNAS
@@ -154,8 +72,9 @@ def handle_signup():
         email=body["email"],
         password=password_hash,
         name=body["name"],
-        bio=body.get("bio", ""), # Si no mandan bio, queda vacío
-        avatar_url=body.get("avatar_url", ""), # Recibimos la URL de la foto que manden
+        bio=body.get("bio", ""),  # Si no mandan bio, queda vacío
+        # Recibimos la URL de la foto que manden
+        avatar_url=body.get("avatar_url", ""),
         wallet_credits=20,
         is_active=True
     )
@@ -209,8 +128,8 @@ def add_skill():
     new_skill = Skill(
         title=body["title"],
         description=body.get("description", ""),
-        credits_per_hour=1, # Por acuerdo de equipo
-        image_url=unsplash_url, # Foto automática para que el Front se vea BIEN
+        credits_per_hour=1,  # Por acuerdo de equipo
+        image_url=unsplash_url,  # Foto automática para que el Front se vea BIEN
         user_id=current_user_id
     )
 
@@ -220,13 +139,7 @@ def add_skill():
     return jsonify({"msg": "Habilidad publicada correctamente", "skill": new_skill.serialize()}), 201
 
 
-
-
-
-
-
-
-#Andri Gestion de Datos
+# Andri Gestion de Datos
 @api.route('/users/profile', methods=['GET'])
 @jwt_required()
 def get_profile():
@@ -236,7 +149,7 @@ def get_profile():
 
     if not user:
         return jsonify({'error': 'User not found'}), 404
-    
+
     return jsonify(user.serialize()), 200
 
 
@@ -294,7 +207,6 @@ def delete_skill(skill_id):
     return jsonify({"msg": "Habilidad eliminada correctamente"}), 200
 
 
-
 # 4. TRANSACCIÓN: LOGICA DE INTERCAMBIO DE CREDITOS POR TIEMPO EN HBILIDAD
 @api.route('/book-session', methods=['POST'])
 @jwt_required()
@@ -315,7 +227,7 @@ def book_session():
     # Validaciones de seguridad para no romper la economía
     if not teacher:
         return jsonify({"msg": "El profesor no existe"}), 404
-    
+
     if str(student.id) == str(teacher.id):
         return jsonify({"msg": "No puedes comprarte una clase a ti mismo, crack"}), 400
 
@@ -323,10 +235,10 @@ def book_session():
         return jsonify({"msg": "No tienes créditos. ¡Enseña algo para ganar más!"}), 402
 
     # LÓGICA DE INTERCAMBIO
-    student.wallet_credits -= 1 # Restamos al alumno
-    teacher.wallet_credits += 1 # Sumamos al profe
+    student.wallet_credits -= 1  # Restamos al alumno
+    teacher.wallet_credits += 1  # Sumamos al profe
 
-    db.session.commit() # Guardamos los cambios de ambos
+    db.session.commit()  # Guardamos los cambios de ambos
 
     return jsonify({
         "msg": "Intercambio realizado con éxito",
