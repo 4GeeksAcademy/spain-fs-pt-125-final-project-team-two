@@ -14,59 +14,60 @@ export const initialStore = () => {
 
     // UI global
     isPostModalOpen: false,
-    isProfileDropdownOpen: false
+    isProfileDropdownOpen: false,
   };
 };
 
 // REDUCER GLOBAL
 export default function storeReducer(store, action = {}) {
   switch (action.type) {
-
-    // --- LOGIN ---
     case "login_success":
       localStorage.setItem("token", action.payload.token);
       return {
         ...store,
         token: action.payload.token,
         user: action.payload.user,
-        isAuthenticated: true
+        isAuthenticated: true,
       };
 
-    // --- LOGOUT ---
+    case "SET_USER":
+      return {
+        ...store,
+        user: action.payload,
+        isAuthenticated: true,
+      };
+
     case "logout":
       localStorage.removeItem("token");
       return {
         ...store,
         token: null,
         user: null,
-        isAuthenticated: false
+        isAuthenticated: false,
       };
 
-    // --- PERFIL ---
     case "SET_USER_PROFILE":
       return {
         ...store,
-        userProfile: action.payload
+        userProfile: action.payload,
       };
 
-    // --- FEED ---
     case "SET_ACTIVITIES":
       return {
         ...store,
-        activities: action.payload
+        activities: action.payload,
       };
 
-    // --- UI ---
     case "TOGGLE_POST_MODAL":
       return {
         ...store,
-        isPostModalOpen: !store.isPostModalOpen
+        isPostModalOpen: !store.isPostModalOpen,
       };
 
     case "TOGGLE_PROFILE_DROPDOWN":
       return {
         ...store,
-        isProfileDropdownOpen: !store.isProfileDropdownOpen
+        isProfileDropdownOpen: !store.isProfileDropdownOpen,
       };
 
     default:

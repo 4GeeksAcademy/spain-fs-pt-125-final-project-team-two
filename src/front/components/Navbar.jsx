@@ -4,7 +4,7 @@ import "./../../front/Navbar.css";
 
 export const Navbar = ({ onOpenRegister }) => {
 
-  const {store, dispatch} = useGlobalReducer();
+  const { store, dispatch } = useGlobalReducer();
   return (
     <nav className="navbar navbar-expand-lg navbar-dark skillbank-navbar shadow-sm">
       <div className="container-fluid">

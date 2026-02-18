@@ -29,15 +29,20 @@ export const Feed = () => {
     <div className="container mt-4">
       <h2 className="mb-4">Actividades disponibles</h2>
 
+      {/* Si no hay actividades */}
+      {store.activities.length === 0 && (
+        <p className="text-muted">No hay actividades recientes.</p>
+      )}
+
       <div className="row g-4">
-        {store.activities?.map((skill) => (
+        {store.activities.map((skill) => (
           <div className="col-md-4" key={skill.id}>
             <InfoCard
               title={skill.title}
               shortText={skill.description}
               fullText={skill.description}
               img={skill.image_url}
-              user={`Usuario #${skill.user_id}`}
+             // user={`Usuario #${skill.user_id}`}  // temporal
               updatedAt="Recientemente"
               creditsPerHour={skill.credits_per_hour}
             />

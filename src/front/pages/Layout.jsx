@@ -18,8 +18,8 @@ export const Layout = () => {
         name: data.name,
         email: data.email,
         password: data.password,
-        bio: data.description,      
-        avatar_url: data.avatar_url 
+        bio: data.description,
+        avatar_url: data.avatar_url
       };
 
       const response = await fetch(`${API_URL}/api/signup`, {
@@ -35,24 +35,28 @@ export const Layout = () => {
         return;
       }
 
-      const user = await response.json();
+      const result = await response.json();
 
-      // Guardar usuario en el store global
+
       dispatch({
-        type: "SET_USER",
-        payload: user
+        type: "login_success",
+        payload: {
+          token: result.token,
+          user: result.user
+        }
       });
 
-      // Cerrar modal
+
       setOpenRegister(false);
 
-      // Redirigir a /feed
+
       navigate("/feed");
 
     } catch (error) {
       console.error("Error en el POST:", error);
     }
   };
+
 
   return (
     <ScrollToTop>
