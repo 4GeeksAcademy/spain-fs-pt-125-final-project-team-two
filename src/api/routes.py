@@ -86,12 +86,12 @@ def handle_signup():
     access_token = create_access_token(identity=str(new_user.id))
 
     return jsonify({
-    "msg": "Usuario creado con 20 créditos de regalo",
-    "token": access_token,
-    "user_id": new_user.id,
-    "name": new_user.name,
-    "credits": new_user.wallet_credits
-}), 201
+        "msg": "Usuario creado con 20 créditos de regalo",
+        "token": access_token,
+        "user_id": new_user.id,
+        "name": new_user.name,
+        "credits": new_user.wallet_credits
+    }), 201
 
 
 # 2. LOGIN: Compara el hash y suelta el Token
@@ -158,6 +158,48 @@ def get_profile():
 
     if not user:
         return jsonify({'error': 'User not found'}), 404
+
+    return jsonify(user.serialize()), 200
+
+
+@api.route('/users/profile', methods=['PUT'])
+@jwt_required()
+def update_profile():
+    user_id = get_jwt_identity()
+    user = User.query.get(user_id)
+
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+
+    body = request.get_json() or {}
+
+    # Campos que puede actualizar el usuario
+    new_name = body.get('name')
+    new_email = body.get('email')
+    new_bio = body.get('description') or body.get('bio')
+    new_avatar = body.get('avatar_url')
+    new_password = body.get('password')
+
+    # Si cambian el email, comprobar unicidad
+    if new_email and new_email != user.email:
+        exists = User.query.filter_by(email=new_email).first()
+        if exists:
+            return jsonify({'message': 'El email ya está en uso'}), 400
+        user.email = new_email
+
+    if new_name:
+        user.name = new_name
+
+    if new_bio is not None:
+        user.bio = new_bio
+
+    if new_avatar is not None:
+        user.avatar_url = new_avatar
+
+    if new_password:
+        user.password = generate_password_hash(new_password)
+
+    db.session.commit()
 
     return jsonify(user.serialize()), 200
 

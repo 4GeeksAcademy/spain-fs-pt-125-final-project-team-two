@@ -39,7 +39,7 @@ export const Layout = () => {
       const result = await response.json();
       console.log("RESULTADO DEL SIGNUP:", result);
 
-      // Construimos el usuario según lo que devuelve tu backend
+      
       const userObject = {
         id: result.user_id,
         name: result.name,

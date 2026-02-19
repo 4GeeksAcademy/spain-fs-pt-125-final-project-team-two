@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import InfoCard from "../components/InfoCard";
 import useGlobalReducer from "../hooks/useGlobalReducer";
+import PredefinedIMG from "../assets/img/PredefinedIMG.jpg";
 import { API_URL } from "../../config.js";
 
 export const Feed = () => {
@@ -29,7 +30,7 @@ export const Feed = () => {
     <div className="container mt-4">
       <h2 className="mb-4">Actividades disponibles</h2>
 
-      {/* Si no hay actividades */}
+      
       {store.activities.length === 0 && (
         <p className="text-muted">No hay actividades recientes.</p>
       )}
@@ -41,8 +42,8 @@ export const Feed = () => {
               title={skill.title}
               shortText={skill.description}
               fullText={skill.description}
-              img={skill.image_url}
-              user={`Usuario #${skill.user_id}`}  // temporal
+              img={skill.image_url || PredefinedIMG}
+              user={`Usuario #${skill.user_id}`} 
               updatedAt="Recientemente"
               creditsPerHour={skill.credits_per_hour}
             />
