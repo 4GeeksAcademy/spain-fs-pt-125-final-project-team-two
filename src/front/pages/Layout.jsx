@@ -6,7 +6,7 @@ import { Footer } from "../components/Footer";
 import { ProfileForm } from "../components/ProfileForm";
 import { API_URL } from "../../config.js";
 import useGlobalReducer from "../hooks/useGlobalReducer";
-import {LoginModal} from "../components/LoginModal.jsx"
+import { LoginModal } from "../components/LoginModal.jsx";
 
 export const Layout = () => {
   const [openRegister, setOpenRegister] = useState(false);
@@ -37,27 +37,33 @@ export const Layout = () => {
       }
 
       const result = await response.json();
+      console.log("RESULTADO DEL SIGNUP:", result);
 
+      // Construimos el usuario según lo que devuelve tu backend
+      const userObject = {
+        id: result.user_id,
+        name: result.name,
+        email: data.email,
+        description: data.description,
+        avatar_url: data.avatar_url,
+        wallet_credits: result.credits
+      };
 
       dispatch({
         type: "login_success",
         payload: {
           token: result.token,
-          user: result.user
+          user: userObject
         }
       });
 
-
       setOpenRegister(false);
-
-
       navigate("/feed");
 
     } catch (error) {
       console.error("Error en el POST:", error);
     }
   };
-
 
   return (
     <ScrollToTop>

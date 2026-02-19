@@ -1,32 +1,27 @@
 import { useState } from "react";
 import { ProfileForm } from "../components/ProfileForm";
 import useGlobalReducer from "../hooks/useGlobalReducer";
+import skillbankAvatar from "../assets/img/SkillBank.png";
 
 export const Profile = () => {
   const { store, dispatch } = useGlobalReducer();
   const [open, setOpen] = useState(false);
 
-  // Datos del usuario desde el store global
   const userData = store.user || {
-    name: "Benjamin",
-    email: "benjamin@example.com",
-    description: "Aqui puedes dejar tu informacion, lo que los usuarios deberian saber de ti.",
+    name: "Usuario",
+    email: "email@example.com",
+    description: "Aquí puedes escribir tu biografía.",
+    avatar_url: "",
+    wallet_credits: 0
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    const formData = new FormData(e.target);
-
-    const updatedUser = {
-      name: formData.get("name"),
-      email: formData.get("email"),
-      description: formData.get("description"),
-    };
-
+  const handleSubmit = (updatedUser) => {
     dispatch({
       type: "SET_USER",
-      payload: updatedUser,
+      payload: {
+        ...store.user,
+        ...updatedUser
+      }
     });
 
     setOpen(false);
@@ -41,14 +36,14 @@ export const Profile = () => {
 
         <div className="profile-content">
           <img
-            src="ruta-de-tu-foto.jpg"
+            src={userData.avatar_url || skillbankAvatar}
             className="profile-avatar"
             alt="Foto de perfil"
           />
 
           <h1 className="profile-name">{userData.name}</h1>
           <p className="profile-email">{userData.email}</p>
-          
+
           <p className="profile-credits">
             Créditos disponibles: <span>{userData.wallet_credits}</span>
           </p>
@@ -57,7 +52,6 @@ export const Profile = () => {
         </div>
       </div>
 
-      {/* Modal */}
       {open && (
         <div className="modal-overlay">
           <div className="modal-content">

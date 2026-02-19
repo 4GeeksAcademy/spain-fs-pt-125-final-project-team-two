@@ -1,5 +1,6 @@
 import { useState } from "react";
-import "../ProfileForm.css"; 
+import "../ProfileForm.css";
+import skillbankAvatar from "../assets/img/SkillBank.png";
 
 export const ProfileForm = ({ user = {}, onSubmit }) => {
   const [preview, setPreview] = useState(user.avatar_url || "");
@@ -52,9 +53,10 @@ export const ProfileForm = ({ user = {}, onSubmit }) => {
       {/* PREVIEW DEL AVATAR */}
       <div className="avatar-preview-wrapper">
         <img
-          src={preview || "/default-avatar.png"}
+          src={preview || skillbankAvatar}
           className="avatar-preview"
         />
+
       </div>
 
       <div className="form-field">

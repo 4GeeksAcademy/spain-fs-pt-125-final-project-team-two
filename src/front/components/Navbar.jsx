@@ -8,11 +8,10 @@ export const Navbar = ({ onOpenRegister }) => {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark skillbank-navbar shadow-sm">
       <div className="container-fluid">
-        <Link to="/">
-        <a className="navbar-brand fw-semibold" href="#">
+        <Link to="/" className="navbar-brand fw-semibold">
           <span className="brand-pill">SkillBank</span>
-        </a>
         </Link>
+
 
         <button
           className="navbar-toggler"
@@ -29,22 +28,10 @@ export const Navbar = ({ onOpenRegister }) => {
         <div className="collapse navbar-collapse navbar-animate" id="navbarSkillBank">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0"></ul>
 
-          <form className="d-flex me-3 search-wrapper" role="search">
-            <input
-              className="form-control form-control-sm search-input"
-              type="search"
-              placeholder="Buscar cursos"
-              aria-label="Buscar"
-            />
-            <button className="btn btn-outline-light btn-sm search-button" type="submit">
-              Buscar
-            </button>
-          </form>
-
           <div className="d-flex gap-2 auth-buttons">
             {!store.token ? (
               <>
-                <button className="btn btn-outline-light btn-sm btn-ghost" type="button" onClick={() => dispatch({type: "TOGGLE_LOGIN_MODAL"})}>
+                <button className="btn btn-outline-light btn-sm btn-ghost" type="button" onClick={() => dispatch({ type: "TOGGLE_LOGIN_MODAL" })}>
                   Login
                 </button>
 

@@ -42,7 +42,7 @@ export const Feed = () => {
               shortText={skill.description}
               fullText={skill.description}
               img={skill.image_url}
-             // user={`Usuario #${skill.user_id}`}  // temporal
+              user={`Usuario #${skill.user_id}`}  // temporal
               updatedAt="Recientemente"
               creditsPerHour={skill.credits_per_hour}
             />
