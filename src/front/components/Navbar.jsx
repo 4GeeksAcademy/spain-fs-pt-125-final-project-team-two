@@ -1,10 +1,19 @@
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import useGlobalReducer from '../hooks/useGlobalReducer'
 import "./../../front/Navbar.css";
 
 export const Navbar = ({ onOpenRegister }) => {
 
   const {store, dispatch} = useGlobalReducer();
+
+  const navigate = useNavigate()
+
+  const handleLogout = () => {
+    dispatch({ type: 'logout'});
+    navigate("/")
+  }
+
   return (
     <nav className="navbar navbar-expand-lg navbar-dark skillbank-navbar shadow-sm">
       <div className="container-fluid">
@@ -66,7 +75,7 @@ export const Navbar = ({ onOpenRegister }) => {
                 <button
                   className="btn btn-danger btn-sm btn-pill"
                   type="button"
-                  onClick={() => dispatch({ type: 'logout' })}
+                  onClick={handleLogout}
                 >
                   Logout
                 </button>
