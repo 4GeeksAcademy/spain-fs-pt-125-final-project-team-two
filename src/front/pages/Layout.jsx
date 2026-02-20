@@ -6,7 +6,7 @@ import { Footer } from "../components/Footer";
 import { ProfileForm } from "../components/ProfileForm";
 import { API_URL } from "../../config.js";
 import useGlobalReducer from "../hooks/useGlobalReducer";
-import {LoginModal} from "../components/LoginModal.jsx"
+import { LoginModal } from "../components/LoginModal.jsx";
 
 export const Layout = () => {
   const [openRegister, setOpenRegister] = useState(false);
@@ -19,8 +19,8 @@ export const Layout = () => {
         name: data.name,
         email: data.email,
         password: data.password,
-        bio: data.description,      
-        avatar_url: data.avatar_url 
+        bio: data.description,
+        avatar_url: data.avatar_url
       };
 
       const response = await fetch(`${API_URL}/api/signup`, {
@@ -36,18 +36,28 @@ export const Layout = () => {
         return;
       }
 
-      const user = await response.json();
+      const result = await response.json();
+      console.log("RESULTADO DEL SIGNUP:", result);
 
-      // Guardar usuario en el store global
+      
+      const userObject = {
+        id: result.user_id,
+        name: result.name,
+        email: data.email,
+        description: data.description,
+        avatar_url: data.avatar_url,
+        wallet_credits: result.credits
+      };
+
       dispatch({
-        type: "SET_USER",
-        payload: user
+        type: "login_success",
+        payload: {
+          token: result.token,
+          user: userObject
+        }
       });
 
-      // Cerrar modal
       setOpenRegister(false);
-
-      // Redirigir a /feed
       navigate("/feed");
 
     } catch (error) {
