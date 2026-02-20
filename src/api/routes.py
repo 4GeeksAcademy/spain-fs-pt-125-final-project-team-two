@@ -137,7 +137,7 @@ def add_skill():
     new_skill = Skill(
         title=body["title"],
         description=body.get("description", ""),
-        credits_per_hour=1,  # Por acuerdo de equipo
+        credits_per_hour=body.get("credits_per_hour", 1),  # Por acuerdo de equipo
         image_url=unsplash_url,  # Foto automática para que el Front se vea BIEN
         user_id=current_user_id
     )

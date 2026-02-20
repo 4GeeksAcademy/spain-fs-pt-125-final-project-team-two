@@ -7,6 +7,7 @@ import { ProfileForm } from "../components/ProfileForm";
 import { API_URL } from "../../config.js";
 import useGlobalReducer from "../hooks/useGlobalReducer";
 import { LoginModal } from "../components/LoginModal.jsx";
+import PostModal from '../components/PostModal.jsx'
 
 export const Layout = () => {
   const [openRegister, setOpenRegister] = useState(false);
@@ -82,6 +83,7 @@ export const Layout = () => {
 
       <Outlet />
       <LoginModal />
+      <PostModal />
       <Footer />
     </ScrollToTop>
   );

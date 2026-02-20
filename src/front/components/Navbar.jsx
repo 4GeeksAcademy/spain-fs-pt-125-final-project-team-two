@@ -51,6 +51,13 @@ export const Navbar = ({ onOpenRegister }) => {
               </>
             ) : (
               <>
+                <button
+                  className="btn btn-primary btn-sm btn-pill fw-semibold shadow-sm d-flex align-items-center gap-1"
+                  type="button"
+                  onClick={() => dispatch({ type: "TOGGLE_POST_MODAL" })}
+                >
+                  <span style={{ fontSize: "1.1rem", lineHeight: 1 }}>+</span> Nuevo Curso
+                </button>
                 <Link to="/feed">
                   <button className="btn btn-outline-light btn-sm btn-ghost" type="button">
                     Cursos
