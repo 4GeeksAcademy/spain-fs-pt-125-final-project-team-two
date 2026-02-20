@@ -58,7 +58,7 @@ export const Profile = () => {
       const normalized = {
         ...store.user,
         ...data,
-        // garantizar ambos campos para compatibilidad con el Front
+        
         description: data.description ?? data.bio ?? store.user?.description ?? store.user?.bio,
         bio: data.bio ?? data.description ?? store.user?.bio ?? store.user?.description
       };
