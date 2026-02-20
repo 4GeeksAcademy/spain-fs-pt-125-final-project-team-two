@@ -12,7 +12,7 @@ export const Navbar = ({ onOpenRegister }) => {
     navigate('/');
   }
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark skillbank-navbar shadow-sm">
+    <nav className="navbar navbar-expand-lg navbar-dark skillbank-navbar shadow-sm" style={{ zIndex: 1050 }}>
       <div className="container-fluid">
         <Link to="/" className="navbar-brand fw-semibold">
           <span className="brand-pill">SkillBank</span>
@@ -50,20 +50,52 @@ export const Navbar = ({ onOpenRegister }) => {
                 </button>
               </>
             ) : (
-              <>
-                <Link to="/profile">
-                  <button className="btn btn-outline-light btn-sm btn-ghost" type="button">
-                    Mi Perfil
-                  </button>
-                </Link>
+              <div className="dropdown position-relative">
                 <button
-                  className="btn btn-danger btn-sm btn-pill"
+                  className="btn btn-outline-light btn-sm btn-ghost dropdown-toggle d-flex align-items-center gap-2"
                   type="button"
-                  onClick={handleLogout}
+                  onClick={() => dispatch({ type: "TOGGLE_PROFILE_DROPDOWN" })}
                 >
-                  Logout
+                  Mi cuenta
                 </button>
-              </>
+                {store.isProfileDropdownOpen && (
+                  <ul
+                    className="dropdown-menu dropdown-menu-dark show position-absolute shadow"
+                    style={{
+                      right: 0,
+                      left: "auto",
+                      top: "120%",
+                      minWidth: "150px",
+                      backgroundColor: "#1e293b",
+                      border: "1px solid rgba(148, 163, 184, 0.2)",
+                      zIndex: 1050
+                    }}
+                  >
+                    <li>
+                      <Link
+                        to="/profile"
+                        className="dropdown-item skillbank-dropdown-item fw-medium"
+                        onClick={() => dispatch({ type: "TOGGLE_PROFILE_DROPDOWN" })}
+                      >
+                        Mi Perfil
+                      </Link>
+                    </li>
+                    <li><hr className="dropdown-divider" style={{ borderColor: "rgba(148, 163, 184, 0.2)", margin: "4px 0" }} /></li>
+                    <li>
+                      <button
+                        className="dropdown-item skillbank-dropdown-danger fw-semibold"
+                        type="button"
+                        onClick={() => {
+                          dispatch({ type: "TOGGLE_PROFILE_DROPDOWN" });
+                          handleLogout();
+                        }}
+                      >
+                        Cerrar Sesión
+                      </button>
+                    </li>
+                  </ul>
+                )}
+              </div>
             )}
           </div>
         </div>
