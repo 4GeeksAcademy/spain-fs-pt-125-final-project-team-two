@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import useGlobalReducer from "../hooks/useGlobalReducer";
 import "../ProfileForm.css"; 
 
@@ -7,6 +8,8 @@ export const LoginModal = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState(null);
+
+    const navigate = useNavigate();
 
     if (!store.isLoginModalOpen) return null;
 
@@ -31,6 +34,8 @@ export const LoginModal = () => {
             });
 
             dispatch({ type: "TOGGLE_LOGIN_MODAL" });
+
+            navigate("/feed");
 
         } catch (error) {
             setError(error.message);
