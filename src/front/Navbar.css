@@ -162,3 +162,26 @@
   filter: brightness(1.05);
   color: #020617;
 }
+
+.skillbank-dropdown-item {
+  color: #f8fafc !important;
+  transition: all 0.2s ease-in-out;
+  padding: 8px 16px;
+}
+
+.skillbank-dropdown-item:hover {
+  background-color: rgba(148, 163, 184, 0.15) !important; 
+  color: #38bdf8 !important; 
+}
+
+
+.skillbank-dropdown-danger {
+  color: #ef4444 !important; 
+  transition: all 0.2s ease-in-out;
+  padding: 8px 16px;
+}
+
+.skillbank-dropdown-danger:hover {
+  background-color: rgba(239, 68, 68, 0.1) !important; 
+  color: #f87171 !important; 
+}
