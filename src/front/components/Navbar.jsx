@@ -51,6 +51,11 @@ export const Navbar = ({ onOpenRegister }) => {
               </>
             ) : (
               <>
+                <Link to="/feed">
+                  <button className="btn btn-outline-light btn-sm btn-ghost" type="button">
+                    Cursos
+                  </button>
+                </Link>
                 <Link to="/profile">
                   <button className="btn btn-outline-light btn-sm btn-ghost" type="button">
                     Mi Perfil

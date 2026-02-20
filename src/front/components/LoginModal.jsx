@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useGlobalReducer from "../hooks/useGlobalReducer";
+import { API_URL } from "../../config.js";
 import "../ProfileForm.css"; 
 
 export const LoginModal = () => {
@@ -28,10 +29,34 @@ export const LoginModal = () => {
 
             if (!resp.ok) throw new Error(data.msg);
 
+
             dispatch({
                 type: "login_success",
-                payload: data,
+                payload: {
+                    token: data.token,
+                    user: data.user ?? null
+                },
             });
+
+            
+            try {
+                if (!data.user) {
+                    const token = data.token || localStorage.getItem("token");
+                    if (token) {
+                        const profResp = await fetch(`${API_URL}/api/users/profile`, {
+                            headers: {
+                                Authorization: "Bearer " + token
+                            }
+                        });
+                        if (profResp.ok) {
+                            const profData = await profResp.json();
+                            dispatch({ type: "SET_USER", payload: profData });
+                        }
+                    }
+                }
+            } catch (e) {
+                console.error("No se pudo obtener el perfil tras login:", e);
+            }
 
             dispatch({ type: "TOGGLE_LOGIN_MODAL" });
 
