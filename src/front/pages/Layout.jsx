@@ -16,12 +16,12 @@ export const Layout = () => {
 
   const handleRegisterSubmit = async (data) => {
     try {
+      const nameFromEmail = data.email ? data.email.split("@")[0] : "Usuario";
       const payload = {
-        name: data.name,
         email: data.email,
         password: data.password,
-        bio: data.description,
-        avatar_url: data.avatar_url
+        avatar_url: data.avatar_url,
+        name: nameFromEmail
       };
 
       const response = await fetch(`${API_URL}/api/signup`, {
@@ -40,12 +40,11 @@ export const Layout = () => {
       const result = await response.json();
       console.log("RESULTADO DEL SIGNUP:", result);
 
-      
+
       const userObject = {
         id: result.user_id,
-        name: result.name,
         email: data.email,
-        description: data.description,
+        name: nameFromEmail,
         avatar_url: data.avatar_url,
         wallet_credits: result.credits
       };
@@ -73,10 +72,14 @@ export const Layout = () => {
       {openRegister && (
         <div className="modal-overlay">
           <div className="modal-content">
-            <ProfileForm onSubmit={handleRegisterSubmit} />
-            <button className="modal-close" onClick={() => setOpenRegister(false)}>
-              Cerrar
+            <button
+              className="btn-close position-absolute top-0 start-0 m-3"
+              onClick={() => setOpenRegister(false)}
+              aria-label="Cerrar"
+            >
+              ×
             </button>
+            <ProfileForm onSubmit={handleRegisterSubmit} />
           </div>
         </div>
       )}

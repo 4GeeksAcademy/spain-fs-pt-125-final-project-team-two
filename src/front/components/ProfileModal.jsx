@@ -6,14 +6,16 @@ export const ProfileModal = ({ show, onClose, onSubmit }) => {
 
   return (
     <div className="modal-backdrop-custom">
-      <div className="modal-custom">
+      <div className="modal-custom position-relative">
+        <button className="btn-close position-absolute top-0 start-0 m-3" onClick={onClose} aria-label="Cerrar">
+          ×
+        </button>
         <div className="modal-header">
           <h5 className="modal-title">Crear perfil</h5>
-          <button className="btn-close" onClick={onClose}></button>
         </div>
 
         <div className="modal-body">
-          <ProfileForm onSubmit={onSubmit} defaultValues={{}} />
+          <ProfileForm user={{}} onSubmit={onSubmit} />
         </div>
 
         <div className="modal-footer">

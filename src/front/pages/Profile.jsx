@@ -13,7 +13,7 @@ export const Profile = () => {
   const userData = {
     name: store.user?.name ?? "Usuario",
     email: store.user?.email ?? "email@example.com",
-    description: store.user?.description ?? store.user?.bio ?? "Aquí puedes escribir tu biografía.",
+    description: store.user?.description ?? store.user?.bio ?? "Aquí puede aparecer tu biografía, háblanos de ti.",
     avatar_url: store.user?.avatar_url ?? "",
     wallet_credits: store.user?.wallet_credits ?? 0,
     id: store.user?.id ?? null
@@ -25,9 +25,7 @@ export const Profile = () => {
 
     try {
       const payload = {
-        name: updatedUser.name,
         email: updatedUser.email,
-        description: updatedUser.description,
         avatar_url: updatedUser.avatar_url,
       };
 
@@ -58,7 +56,7 @@ export const Profile = () => {
       const normalized = {
         ...store.user,
         ...data,
-        
+
         description: data.description ?? data.bio ?? store.user?.description ?? store.user?.bio,
         bio: data.bio ?? data.description ?? store.user?.bio ?? store.user?.description
       };
@@ -105,15 +103,16 @@ export const Profile = () => {
       {open && (
         <div className="modal-overlay">
           <div className="modal-content">
-            {error && <p className="form-error">{error}</p>}
-            <ProfileForm user={userData} onSubmit={handleSubmit} />
             <button
-              className="modal-close"
+              className="btn-close position-absolute top-0 start-0 m-3"
               onClick={() => setOpen(false)}
               disabled={saving}
+              aria-label="Cerrar"
             >
-              Cerrar
+              ×
             </button>
+            {error && <p className="form-error">{error}</p>}
+            <ProfileForm user={userData} onSubmit={handleSubmit} />
           </div>
         </div>
       )}

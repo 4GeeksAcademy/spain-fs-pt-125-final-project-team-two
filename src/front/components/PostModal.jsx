@@ -5,11 +5,11 @@ import "./../../front/PostModal.css";
 
 function PostModal() {
   const { store, dispatch } = useGlobalReducer();
-  
-  
+
+
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [creditsPerHour, setCreditsPerHour] = useState(1); 
+  const [creditsPerHour, setCreditsPerHour] = useState(1);
   const [loading, setLoading] = useState(false);
 
   if (!store.isPostModalOpen) return null;
@@ -29,24 +29,24 @@ function PostModal() {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${store.token}`
         },
-        
-        body: JSON.stringify({ 
-          title, 
-          description, 
+
+        body: JSON.stringify({
+          title,
+          description,
           credits_per_hour: parseInt(creditsPerHour),
-          category: "education learning" 
-        }) 
+          category: "education learning"
+        })
       });
 
       if (response.ok) {
         const data = await response.json();
-        
+
         dispatch({
           type: "SET_ACTIVITIES",
-          payload: [data.skill, ...store.activities] 
+          payload: [data.skill, ...store.activities]
         });
 
-        
+
         setTitle("");
         setDescription("");
         setCreditsPerHour(1);
@@ -63,21 +63,22 @@ function PostModal() {
 
   return (
     <div className="modal-overlay">
-      <div className="skillbank-modal shadow-lg">
-        
+      <div className="skillbank-modal shadow-lg position-relative">
+        <button type="button" className="btn-close position-absolute top-0 start-0 m-3" onClick={handleClose} aria-label="Cerrar">
+          ×
+        </button>
         <div className="modal-header">
           <h5 className="modal-title fw-bold">Publicar un Nuevo Curso</h5>
-          <button type="button" className="btn-close" onClick={handleClose}></button>
         </div>
 
         <form onSubmit={handleSubmit}>
           <div className="modal-body text-start">
             <div className="mb-3">
               <label htmlFor="courseTitle" className="form-label fw-semibold">Título del curso</label>
-              <input 
-                type="text" 
+              <input
+                type="text"
                 id="courseTitle"
-                className="form-control" 
+                className="form-control"
                 placeholder="Ej: Introducción a React"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
@@ -85,13 +86,13 @@ function PostModal() {
               />
             </div>
 
-            
+
             <div className="mb-3">
               <label htmlFor="courseCredits" className="form-label fw-semibold">Créditos por hora</label>
-              <input 
-                type="number" 
+              <input
+                type="number"
                 id="courseCredits"
-                className="form-control" 
+                className="form-control"
                 placeholder="Ej: 1"
                 min="1"
                 max="20"
@@ -103,17 +104,17 @@ function PostModal() {
 
             <div className="mb-3">
               <label htmlFor="courseDesc" className="form-label fw-semibold">Descripción</label>
-              <textarea 
+              <textarea
                 id="courseDesc"
-                className="form-control" 
-                rows="4" 
+                className="form-control"
+                rows="4"
                 placeholder="Explica qué van a aprender tus alumnos en este curso..."
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 required
               ></textarea>
             </div>
-            
+
             <p className="text-muted small">
               <i className="fa-solid fa-circle-info"></i> La imagen del curso se generará automáticamente según la temática.
             </p>

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useGlobalReducer from "../hooks/useGlobalReducer";
 import { API_URL } from "../../config.js";
-import "../ProfileForm.css"; 
+import "../ProfileForm.css";
 
 export const LoginModal = () => {
     const { store, dispatch } = useGlobalReducer();
@@ -38,7 +38,7 @@ export const LoginModal = () => {
                 },
             });
 
-            
+
             try {
                 if (!data.user) {
                     const token = data.token || localStorage.getItem("token");
@@ -68,30 +68,27 @@ export const LoginModal = () => {
     };
 
     return (
-        
-        <div 
+
+        <div
             className="fixed-top w-100 h-100 d-flex justify-content-center align-items-center"
-            style={{ background: "rgba(15, 23, 42, 0.8)", zIndex: 1050}}
-            onClick={() => dispatch({ type: "TOGGLE_LOGIN_MODAL" })} 
+            style={{ background: "rgba(15, 23, 42, 0.8)", zIndex: 1050 }}
+            onClick={() => dispatch({ type: "TOGGLE_LOGIN_MODAL" })}
         >
-            <div 
+            <div
                 className="p-4 rounded shadow-lg position-relative"
-                style={{ 
+                style={{
                     backgroundColor: "#1e293b",
-                    width: "100%", 
+                    width: "100%",
                     maxWidth: "420px",
-                    border: "1px solid rgba(148, 163, 184, 0.2)" 
+                    border: "1px solid rgba(148, 163, 184, 0.2)"
                 }}
                 onClick={(e) => e.stopPropagation()}
             >
-                <button
-                    className="btn-close btn-close-white position-absolute top-0 end-0 m-3"
-                    onClick={() => dispatch({ type: "TOGGLE_LOGIN_MODAL" })}
-                ></button>
+
 
                 <h2 className="text-center mb-4" style={{ color: "#f8fafc" }}>Bienvenido de nuevo</h2>
                 <form className="skillbank-form" onSubmit={handleLogin}>
-                    
+
                     {error && (
                         <div className="form-error text-center">
                             ⚠️ {error}
@@ -102,7 +99,7 @@ export const LoginModal = () => {
                         <label>Email</label>
                         <input
                             type="email"
-                            placeholder="tu@email.com"
+                            placeholder="email@ejemplo.com"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             required

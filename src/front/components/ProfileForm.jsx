@@ -1,15 +1,23 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "../ProfileForm.css";
 import skillbankAvatar from "../assets/img/SkillBank.png";
 
 export const ProfileForm = ({ user = {}, onSubmit }) => {
-  const [preview, setPreview] = useState(user.avatar_url || "");
+  const isEditing = Boolean(user && user.id);
+
+
+  const [preview, setPreview] = useState("");
   const [errors, setErrors] = useState("");
 
-  const handleAvatarUrlChange = (e) => {
-    const url = e.target.value;
-    setPreview(url);
-  };
+  useEffect(() => {
+    if (isEditing && user.avatar_url) {
+      setPreview(user.avatar_url);
+    } else {
+      const randomSeed = Math.random().toString(36).substring(2);
+      const url = `https://api.dicebear.com/9.x/croodles/svg?seed=${randomSeed}`;
+      setPreview(url);
+    }
+  }, [isEditing, user.avatar_url]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -21,10 +29,14 @@ export const ProfileForm = ({ user = {}, onSubmit }) => {
     const password = formData.get("password");
     const confirm = formData.get("confirm_password");
 
-    // Validaciones de contraseña
+
     if (password || confirm) {
-      if (password.length < 6) {
-        setErrors("La contraseña debe tener al menos 6 caracteres.");
+      const pwd = password || "";
+      const pwdRegex = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/;
+      if (!pwdRegex.test(pwd)) {
+        setErrors(
+          "La contraseña debe tener al menos 8 caracteres e incluir letras y números."
+        );
         return;
       }
 
@@ -34,13 +46,20 @@ export const ProfileForm = ({ user = {}, onSubmit }) => {
       }
     }
 
+    const email = formData.get("email");
     const updatedUser = {
-      name: formData.get("name"),
-      email: formData.get("email"),
-      description: formData.get("description"),
-      avatar_url: formData.get("avatar_url"),
+      email,
+      avatar_url: isEditing ? formData.get("avatar_url") || preview : preview,
       password: password || null,
     };
+
+    if (isEditing) {
+      updatedUser.name = formData.get("name");
+      updatedUser.description = formData.get("description");
+    } else {
+
+      updatedUser.name = email ? email.split("@")[0] : "Usuario";
+    }
 
     onSubmit(updatedUser);
   };
@@ -55,53 +74,61 @@ export const ProfileForm = ({ user = {}, onSubmit }) => {
         <img
           src={preview || skillbankAvatar}
           className="avatar-preview"
+          alt="Avatar aleatorio"
         />
 
       </div>
 
-      <div className="form-field">
-        <label>URL de la imagen</label>
-        <input
-          type="text"
-          name="avatar_url"
-          placeholder="https://imagen.com/avatar.png"
-          defaultValue={user.avatar_url || ""}
-          onChange={handleAvatarUrlChange}
-        />
-      </div>
+      {isEditing && (
+        <div className="form-field">
+          <label>URL de la imagen</label>
+          <input
+            type="text"
+            name="avatar_url"
+            placeholder="https://imagen.com/avatar.png"
+            defaultValue={user.avatar_url || ""}
+            onChange={(e) => setPreview(e.target.value)}
+          />
+        </div>
+      )}
 
-      <div className="form-field">
-        <label>Nombre</label>
-        <input
-          type="text"
-          name="name"
-          defaultValue={user.name || ""}
-          required
-        />
-      </div>
+      {isEditing && (
+        <div className="form-field">
+          <label>Nombre</label>
+          <input
+            type="text"
+            name="name"
+            defaultValue={user.name || ""}
+            required
+          />
+        </div>
+      )}
+
+      {isEditing && (
+        <div className="form-field">
+          <label>Biografía</label>
+          <textarea
+            name="description"
+            rows="3"
+            defaultValue={user.description || ""}
+          />
+        </div>
+      )}
 
       <div className="form-field">
         <label>Email</label>
         <input
           type="email"
           name="email"
+          placeholder="email@ejemplo.com"
           defaultValue={user.email || ""}
           required
         />
       </div>
 
-      <div className="form-field">
-        <label>Biografía</label>
-        <textarea
-          name="description"
-          rows="3"
-          defaultValue={user.description || ""}
-        />
-      </div>
 
-      {/* CAMPOS DE CONTRASEÑA */}
       <div className="form-field">
-        <label>Nueva contraseña</label>
+        <label>Contraseña</label>
         <input
           type="password"
           name="password"
@@ -110,7 +137,7 @@ export const ProfileForm = ({ user = {}, onSubmit }) => {
       </div>
 
       <div className="form-field">
-        <label>Confirmar nueva contraseña</label>
+        <label>Confirmación de contraseña</label>
         <input
           type="password"
           name="confirm_password"
