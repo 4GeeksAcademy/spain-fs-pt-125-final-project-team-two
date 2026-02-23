@@ -8,6 +8,7 @@ from flask_cors import CORS
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
+import re
 
 api = Blueprint('api', __name__)
 
@@ -45,35 +46,44 @@ def get_skills():
 # BLOQUE: CRYS - SEGURIDAD, ACCIÓN Y APIS EXTERNAS
 
 
-# 1. Registro: El usuario nace con 20 créditos y clave encriptada
+# REGISTRO El usuario nace con 20 créditos, seguridad reforzada y login automático
 @api.route('/signup', methods=['POST'])
 def handle_signup():
     body = request.get_json()
 
-    # Validamos datos obligatorios
+    # 1. Validamos datos obligatorios
     if not body or "email" not in body or "password" not in body or "name" not in body:
         return jsonify({"msg": "Faltan datos obligatorios (email, password, name)"}), 400
 
-    # Lógica de confirmación de contraseña (lo que pidió el Front)
+    # 2. VALIDACIÓN DE EMAIL (Formato corporativo: texto@texto.dominio)
+    email = body["email"]
+    if not re.match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$', email):
+        return jsonify({"msg": "El formato del correo electrónico no es válido"}), 400
+
+    # 3. VALIDACIÓN DE CONTRASEÑA (Mínimo 8 caracteres, letras y números)
+    password = body["password"]
+    if not re.match(r'^(?=.*[A-Za-z])(?=.*\d).{8,}$', password):
+        return jsonify({"msg": "La contraseña debe tener al menos 8 caracteres, incluir letras y números"}), 400
+
+    # 4. Lógica de confirmación de contraseña
     confirm_password = body.get("confirm_password")
-    if confirm_password and body["password"] != confirm_password:
+    if confirm_password and password != confirm_password:
         return jsonify({"msg": "Las contraseñas no coinciden"}), 400
 
-    # Comprobamos si el usuario ya existe
-    user_exists = User.query.filter_by(email=body["email"]).first()
+    # 5. Comprobamos si el usuario ya existe para evitar duplicados
+    user_exists = User.query.filter_by(email=email).first()
     if user_exists:
         return jsonify({"msg": "El email ya está registrado"}), 400
 
-    # SEGURIDAD: Encriptamos la clave
-    password_hash = generate_password_hash(body["password"])
+    # 6. SEGURIDAD: Encriptamos la clave (Hash)
+    password_hash = generate_password_hash(password)
 
-    # Creamos el nuevo usuario con los campos extra que pidió el Front
+    # 7. Creamos el nuevo usuario con los campos para el Front
     new_user = User(
-        email=body["email"],
+        email=email,
         password=password_hash,
         name=body["name"],
-        bio=body.get("bio", ""),  # Si no mandan bio, queda vacío
-        # Recibimos la URL de la foto que manden
+        bio=body.get("bio", ""),
         avatar_url=body.get("avatar_url", ""),
         wallet_credits=20,
         is_active=True
@@ -82,7 +92,7 @@ def handle_signup():
     db.session.add(new_user)
     db.session.commit()
 
-    # Creamos el token con el ID del nuevo usuario
+    # 8. Login automático: Generamos el token de una vez
     access_token = create_access_token(identity=str(new_user.id))
 
     return jsonify({
@@ -92,7 +102,6 @@ def handle_signup():
         "name": new_user.name,
         "credits": new_user.wallet_credits
     }), 201
-
 
 # 2. LOGIN: Compara el hash y suelta el Token
 @api.route('/login', methods=['POST'])
