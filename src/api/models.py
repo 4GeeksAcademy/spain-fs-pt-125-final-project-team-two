@@ -43,7 +43,7 @@ class Skill(db.Model):
     title: Mapped[str] = mapped_column(String(100), nullable=False)
     description: Mapped[str] = mapped_column(Text, nullable=False)
     credits_per_hour: Mapped[int] = mapped_column(Integer, nullable=False)
-    
+    image_url: Mapped[str] = mapped_column(String(255), nullable=True)
     user_id: Mapped[int] = mapped_column(ForeignKey('user.id'), nullable=False)
     owner: Mapped["User"] = relationship("User", back_populates="skills")
 
@@ -56,6 +56,7 @@ class Skill(db.Model):
             "title": self.title,
             "description": self.description,
             "credits_per_hour": self.credits_per_hour,
+            "image_url": self.image_url,
             "user_id": self.user_id,
             "user_name": self.owner.name
         }
