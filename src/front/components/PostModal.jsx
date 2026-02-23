@@ -1,20 +1,30 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import useGlobalReducer from "../hooks/useGlobalReducer";
 import { API_URL } from "../../config.js";
 import "./../../front/PostModal.css";
 
 function PostModal() {
   const { store, dispatch } = useGlobalReducer();
-  
-  
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [creditsPerHour, setCreditsPerHour] = useState(1); 
+  const [formData, setFormData] = useState({ title: "", description: "", creditsPerHour: 1 });
   const [loading, setLoading] = useState(false);
+  const isEditing = !!store.selectedActivity;
+
+  useEffect(() => {
+    if (isEditing) {
+      setFormData({
+        title: store.selectedActivity.title || "",
+        description: store.selectedActivity.description || "",
+        creditsPerHour: store.selectedActivity.credits_per_hour || 1
+      });
+    } else {
+      setFormData({ title: "", description: "", creditsPerHour: 1 });
+    }
+  }, [store.selectedActivity, store.isPostModalOpen]);
 
   if (!store.isPostModalOpen) return null;
 
   const handleClose = () => {
+    dispatch({ type: "SET_SELECTED_ACTIVITY", payload: null });
     dispatch({ type: "TOGGLE_POST_MODAL" });
   };
 
@@ -23,39 +33,35 @@ function PostModal() {
     setLoading(true);
 
     try {
-      const response = await fetch(`${API_URL}/api/skills`, {
-        method: "POST",
+      const endpoint = isEditing 
+        ? `${API_URL}/api/skills/${store.selectedActivity.id}`
+        : `${API_URL}/api/skills`;
+
+      const response = await fetch(endpoint.replace(/([^:]\/)\/+/g, "$1"), {
+        method: isEditing ? "PUT" : "POST",
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${store.token}`
         },
-        
-        body: JSON.stringify({ 
-          title, 
-          description, 
-          credits_per_hour: parseInt(creditsPerHour),
-          category: "education learning" 
-        }) 
+        body: JSON.stringify({
+          title: formData.title,
+          description: formData.description,
+          credits_per_hour: parseInt(formData.creditsPerHour),
+          category: "education learning"
+        })
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        
-        dispatch({
-          type: "SET_ACTIVITIES",
-          payload: [data.skill, ...store.activities] 
-        });
+      if (!response.ok) throw new Error("Error en la petición");
+      const data = await response.json();
 
-        
-        setTitle("");
-        setDescription("");
-        setCreditsPerHour(1);
-        handleClose();
-      } else {
-        alert("Ocurrió un error al crear el curso. Revisa los datos.");
-      }
+      const updatedActivities = isEditing
+        ? store.activities.map(act => act.id === store.selectedActivity.id ? data.skill : act)
+        : [data.skill, ...store.activities];
+
+      dispatch({ type: "SET_ACTIVITIES", payload: updatedActivities });
+      handleClose();
     } catch (error) {
-      console.error("Error en la petición:", error);
+      alert("Error de conexión. Revisa si el backend está activo.");
     } finally {
       setLoading(false);
     }
@@ -63,72 +69,33 @@ function PostModal() {
 
   return (
     <div className="modal-overlay">
-      <div className="skillbank-modal shadow-lg">
-        
+      <div className="skillbank-modal">
         <div className="modal-header">
-          <h5 className="modal-title fw-bold">Publicar un Nuevo Curso</h5>
+          <h5 className="modal-title fw-bold">{isEditing ? "Editar mi Curso" : "Publicar Nuevo Curso"}</h5>
           <button type="button" className="btn-close" onClick={handleClose}></button>
         </div>
-
         <form onSubmit={handleSubmit}>
           <div className="modal-body text-start">
             <div className="mb-3">
-              <label htmlFor="courseTitle" className="form-label fw-semibold">Título del curso</label>
-              <input 
-                type="text" 
-                id="courseTitle"
-                className="form-control" 
-                placeholder="Ej: Introducción a React"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                required
-              />
+              <label className="form-label fw-semibold">Título</label>
+              <input type="text" className="form-control" value={formData.title} onChange={(e) => setFormData({...formData, title: e.target.value})} required />
             </div>
-
-            
             <div className="mb-3">
-              <label htmlFor="courseCredits" className="form-label fw-semibold">Créditos por hora</label>
-              <input 
-                type="number" 
-                id="courseCredits"
-                className="form-control" 
-                placeholder="Ej: 1"
-                min="1"
-                max="20"
-                value={creditsPerHour}
-                onChange={(e) => setCreditsPerHour(e.target.value)}
-                required
-              />
+              <label className="form-label fw-semibold">Créditos/Hora</label>
+              <input type="number" className="form-control" value={formData.creditsPerHour} onChange={(e) => setFormData({...formData, creditsPerHour: e.target.value})} required />
             </div>
-
             <div className="mb-3">
-              <label htmlFor="courseDesc" className="form-label fw-semibold">Descripción</label>
-              <textarea 
-                id="courseDesc"
-                className="form-control" 
-                rows="4" 
-                placeholder="Explica qué van a aprender tus alumnos en este curso..."
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                required
-              ></textarea>
+              <label className="form-label fw-semibold">Descripción</label>
+              <textarea className="form-control" rows="4" value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})} required />
             </div>
-            
-            <p className="text-muted small">
-              <i className="fa-solid fa-circle-info"></i> La imagen del curso se generará automáticamente según la temática.
-            </p>
           </div>
-
-          <div className="modal-footer mt-1">
-            <button type="button" className="btn btn-ghost" onClick={handleClose} disabled={loading}>
-              Cancelar
-            </button>
+          <div className="modal-footer">
+            <button type="button" className="btn btn-ghost" onClick={handleClose}>Cancelar</button>
             <button type="submit" className="btn btn-pill btn-primary" disabled={loading}>
-              {loading ? "Publicando..." : "Confirmar y Publicar"}
+              {loading ? "Cargando..." : (isEditing ? "Confirmar Cambios" : "Confirmar y Publicar")}
             </button>
           </div>
         </form>
-
       </div>
     </div>
   );

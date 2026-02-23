@@ -11,6 +11,7 @@ export const initialStore = () => {
 
     // Feed
     activities: [],
+    selectedActivity: null, // <--- Nueva pieza: guarda el curso que estamos editando
 
     // UI global
     isPostModalOpen: false,
@@ -59,6 +60,12 @@ export default function storeReducer(store, action = {}) {
         activities: action.payload,
       };
 
+    case "SET_SELECTED_ACTIVITY": // <--- Acción para marcar qué curso editar
+      return {
+        ...store,
+        selectedActivity: action.payload,
+      };
+
     case "TOGGLE_POST_MODAL":
       return {
         ...store,
@@ -70,12 +77,6 @@ export default function storeReducer(store, action = {}) {
         ...store,
         isProfileDropdownOpen: !store.isProfileDropdownOpen,
       };
-
-    case "TOGGLE_LOGIN_MODAL":
-      return {
-        ...store,
-        isLoginModalOpen: !store.isLoginModalOpen
-      }
 
     case "TOGGLE_LOGIN_MODAL":
       return {
