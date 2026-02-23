@@ -46,7 +46,7 @@ def get_skills():
 # BLOQUE: CRYS - SEGURIDAD, ACCIÓN Y APIS EXTERNAS
 
 
-# 1. Registro: El usuario nace con 20 créditos y clave encriptada
+# REGISTRO El usuario nace con 20 créditos, seguridad reforzada y login automático
 @api.route('/signup', methods=['POST'])
 def handle_signup():
     body = request.get_json()
@@ -55,28 +55,32 @@ def handle_signup():
     if not body or "email" not in body or "password" not in body or "name" not in body:
         return jsonify({"msg": "Faltan datos obligatorios (email, password, name)"}), 400
 
-    # 2. VALIDACIÓN DE CONTRASEÑA 
+    # 2. VALIDACIÓN DE EMAIL (Formato corporativo: texto@texto.dominio)
+    email = body["email"]
+    if not re.match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$', email):
+        return jsonify({"msg": "El formato del correo electrónico no es válido"}), 400
+
+    # 3. VALIDACIÓN DE CONTRASEÑA (Mínimo 8 caracteres, letras y números)
     password = body["password"]
-    # Explicación: (?=.*[A-Za-z]) asegura una letra, (?=.*\d) asegura un número, .{8,} asegura 8 caracteres
     if not re.match(r'^(?=.*[A-Za-z])(?=.*\d).{8,}$', password):
         return jsonify({"msg": "La contraseña debe tener al menos 8 caracteres, incluir letras y números"}), 400
 
-    #  Lógica de confirmación de contraseña 
+    # 4. Lógica de confirmación de contraseña
     confirm_password = body.get("confirm_password")
     if confirm_password and password != confirm_password:
         return jsonify({"msg": "Las contraseñas no coinciden"}), 400
 
-    #  Comprobamos si el usuario ya existe
-    user_exists = User.query.filter_by(email=body["email"]).first()
+    # 5. Comprobamos si el usuario ya existe para evitar duplicados
+    user_exists = User.query.filter_by(email=email).first()
     if user_exists:
         return jsonify({"msg": "El email ya está registrado"}), 400
 
-    # SEGURIDAD: Encriptamos la clave
+    # 6. SEGURIDAD: Encriptamos la clave (Hash)
     password_hash = generate_password_hash(password)
 
-    #  Creamos el nuevo usuario con los campos extra
+    # 7. Creamos el nuevo usuario con los campos para el Front
     new_user = User(
-        email=body["email"],
+        email=email,
         password=password_hash,
         name=body["name"],
         bio=body.get("bio", ""),
@@ -88,7 +92,7 @@ def handle_signup():
     db.session.add(new_user)
     db.session.commit()
 
-    #  Login automático
+    # 8. Login automático: Generamos el token de una vez
     access_token = create_access_token(identity=str(new_user.id))
 
     return jsonify({
