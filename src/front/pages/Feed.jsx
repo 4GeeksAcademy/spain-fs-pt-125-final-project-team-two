@@ -43,6 +43,7 @@ export const Feed = () => {
               <div className="col-md-4" key={skill.id}>
                 <InfoCard
                   title={skill.title}
+                  id={skill.id}
                   shortText={skill.description}
                   fullText={skill.description}
                   img={skill.image_url || PredefinedIMG}

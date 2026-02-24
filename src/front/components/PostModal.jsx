@@ -7,6 +7,7 @@ function PostModal() {
   const { store, dispatch } = useGlobalReducer();
   const [formData, setFormData] = useState({ title: "", description: "", creditsPerHour: 1 });
   const [loading, setLoading] = useState(false);
+
   const isEditing = !!store.selectedActivity;
 
   useEffect(() => {
@@ -30,14 +31,16 @@ function PostModal() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (loading) return;
     setLoading(true);
 
     try {
+      const cleanBaseUrl = API_URL.replace(/\/+$/, "");
       const endpoint = isEditing 
-        ? `${API_URL}/api/skills/${store.selectedActivity.id}`
-        : `${API_URL}/api/skills`;
+        ? `${cleanBaseUrl}/api/skills/${store.selectedActivity.id}`
+        : `${cleanBaseUrl}/api/skills`;
 
-      const response = await fetch(endpoint.replace(/([^:]\/)\/+/g, "$1"), {
+      const response = await fetch(endpoint, {
         method: isEditing ? "PUT" : "POST",
         headers: {
           "Content-Type": "application/json",
@@ -51,7 +54,7 @@ function PostModal() {
         })
       });
 
-      if (!response.ok) throw new Error("Error en la petición");
+      if (!response.ok) throw new Error("Error en servidor");
       const data = await response.json();
 
       const updatedActivities = isEditing
@@ -60,8 +63,9 @@ function PostModal() {
 
       dispatch({ type: "SET_ACTIVITIES", payload: updatedActivities });
       handleClose();
+
     } catch (error) {
-      alert("Error de conexión. Revisa si el backend está activo.");
+      console.error("Error:", error);
     } finally {
       setLoading(false);
     }
@@ -78,21 +82,21 @@ function PostModal() {
           <div className="modal-body text-start">
             <div className="mb-3">
               <label className="form-label fw-semibold">Título</label>
-              <input type="text" className="form-control" value={formData.title} onChange={(e) => setFormData({...formData, title: e.target.value})} required />
+              <input type="text" className="form-control" value={formData.title} onChange={(e) => setFormData({...formData, title: e.target.value})} required disabled={loading} />
             </div>
             <div className="mb-3">
               <label className="form-label fw-semibold">Créditos/Hora</label>
-              <input type="number" className="form-control" value={formData.creditsPerHour} onChange={(e) => setFormData({...formData, creditsPerHour: e.target.value})} required />
+              <input type="number" className="form-control" value={formData.creditsPerHour} onChange={(e) => setFormData({...formData, creditsPerHour: e.target.value})} required disabled={loading} />
             </div>
             <div className="mb-3">
               <label className="form-label fw-semibold">Descripción</label>
-              <textarea className="form-control" rows="4" value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})} required />
+              <textarea className="form-control" rows="4" value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})} required disabled={loading} />
             </div>
           </div>
           <div className="modal-footer">
-            <button type="button" className="btn btn-ghost" onClick={handleClose}>Cancelar</button>
+            <button type="button" className="btn btn-ghost" onClick={handleClose} disabled={loading}>Cancelar</button>
             <button type="submit" className="btn btn-pill btn-primary" disabled={loading}>
-              {loading ? "Cargando..." : (isEditing ? "Confirmar Cambios" : "Confirmar y Publicar")}
+              {loading ? "Procesando..." : (isEditing ? "Confirmar Cambios" : "Confirmar y Publicar")}
             </button>
           </div>
         </form>
