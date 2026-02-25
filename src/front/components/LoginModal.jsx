@@ -27,8 +27,10 @@ export const LoginModal = () => {
 
             const data = await resp.json();
 
-            if (!resp.ok) throw new Error(data.msg);
-
+            if (!resp.ok) {
+                // Personalización del error si la API devuelve msg genérico
+                throw new Error(data.msg || "El email o la contraseña no son válidos.");
+            }
 
             dispatch({
                 type: "login_success",
@@ -37,7 +39,6 @@ export const LoginModal = () => {
                     user: data.user ?? null
                 },
             });
-
             
             try {
                 if (!data.user) {
@@ -59,7 +60,6 @@ export const LoginModal = () => {
             }
 
             dispatch({ type: "TOGGLE_LOGIN_MODAL" });
-
             navigate("/feed");
 
         } catch (error) {
@@ -68,7 +68,6 @@ export const LoginModal = () => {
     };
 
     return (
-        
         <div 
             className="fixed-top w-100 h-100 d-flex justify-content-center align-items-center"
             style={{ background: "rgba(15, 23, 42, 0.8)", zIndex: 1050}}
@@ -87,13 +86,15 @@ export const LoginModal = () => {
                 <button
                     className="btn-close btn-close-white position-absolute top-0 end-0 m-3"
                     onClick={() => dispatch({ type: "TOGGLE_LOGIN_MODAL" })}
+                    aria-label="Close"
                 ></button>
 
                 <h2 className="text-center mb-4" style={{ color: "#f8fafc" }}>Bienvenido de nuevo</h2>
                 <form className="skillbank-form" onSubmit={handleLogin}>
                     
+                    {/* Estilo de error actualizado */}
                     {error && (
-                        <div className="form-error text-center">
+                        <div className="form-error text-center text-danger mb-3" style={{ fontSize: "0.9rem", fontWeight: "600" }}>
                             ⚠️ {error}
                         </div>
                     )}
@@ -119,7 +120,7 @@ export const LoginModal = () => {
                             required
                         />
                     </div>
-                    <button type="submit" className="form-submit mt-3">
+                    <button type="submit" className="form-submit mt-3 w-100">
                         Iniciar Sesión
                     </button>
 
