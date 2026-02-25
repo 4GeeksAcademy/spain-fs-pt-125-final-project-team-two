@@ -116,7 +116,7 @@ export const Footer = () => {
                 ) : (
                   <div className="text-center">
                     <p className="fw-semibold">¡Mensaje enviado!</p>
-                    <p className="text-muted">Gracias por contactarnos. Te responderemos pronto.</p>
+                    <p className="text-white">Gracias por contactarnos. Te responderemos pronto.</p>
                   </div>
                 )}
               </div>
