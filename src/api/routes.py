@@ -15,70 +15,54 @@ api = Blueprint('api', __name__)
 # Allow CORS requests to this API
 CORS(api)
 
-
 # Andri
-
-
 @api.route('/users', methods=['GET'])
 def get_users():
     users = User.query.all()
-
     return jsonify([user.serialize() for user in users]), 200
 
 
 @api.route('/users/<int:id>', methods=['GET'])
 def get_user(id):
     user = User.query.get(id)
-
     if not user:
         return jsonify({"error": "User not found"}), 404
-
     return jsonify(user.serialize()), 200
 
 
 @api.route('/skills', methods=['GET'])
 def get_skills():
     skills = Skill.query.all()
-
     return jsonify([skill.serialize() for skill in skills]), 200
 
 
 # BLOQUE: CRYS - SEGURIDAD, ACCIÓN Y APIS EXTERNAS
 
-
-# REGISTRO El usuario nace con 20 créditos, seguridad reforzada y login automático
 @api.route('/signup', methods=['POST'])
 def handle_signup():
     body = request.get_json()
 
-    # 1. Validamos datos obligatorios
     if not body or "email" not in body or "password" not in body or "name" not in body:
         return jsonify({"msg": "Faltan datos obligatorios (email, password, name)"}), 400
 
-    # 2. VALIDACIÓN DE EMAIL (Formato corporativo: texto@texto.dominio)
     email = body["email"]
     if not re.match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$', email):
         return jsonify({"msg": "El formato del correo electrónico no es válido"}), 400
 
-    # 3. VALIDACIÓN DE CONTRASEÑA (Mínimo 8 caracteres, letras y números)
     password = body["password"]
     if not re.match(r'^(?=.*[A-Za-z])(?=.*\d).{8,}$', password):
         return jsonify({"msg": "La contraseña debe tener al menos 8 caracteres, incluir letras y números"}), 400
 
-    # 4. Lógica de confirmación de contraseña
     confirm_password = body.get("confirm_password")
     if confirm_password and password != confirm_password:
         return jsonify({"msg": "Las contraseñas no coinciden"}), 400
 
-    # 5. Comprobamos si el usuario ya existe para evitar duplicados
     user_exists = User.query.filter_by(email=email).first()
     if user_exists:
         return jsonify({"msg": "El email ya está registrado"}), 400
 
-    # 6. SEGURIDAD: Encriptamos la clave (Hash)
     password_hash = generate_password_hash(password)
 
-    # 7. Creamos el nuevo usuario con los campos para el Front
     new_user = User(
         email=email,
         password=password_hash,
@@ -92,7 +76,6 @@ def handle_signup():
     db.session.add(new_user)
     db.session.commit()
 
-    # 8. Login automático: Generamos el token de una vez
     access_token = create_access_token(identity=str(new_user.id))
 
     return jsonify({
@@ -103,7 +86,7 @@ def handle_signup():
         "credits": new_user.wallet_credits
     }), 201
 
-# 2. LOGIN: Compara el hash y suelta el Token
+
 @api.route('/login', methods=['POST'])
 def handle_login():
     body = request.get_json()
@@ -112,11 +95,9 @@ def handle_login():
 
     user = User.query.filter_by(email=email).first()
 
-    # Verificamos si el usuario existe y si la clave (desencriptada) coincide
     if not user or not check_password_hash(user.password, password):
         return jsonify({"msg": "Usuario o contraseña incorrectos"}), 401
 
-    # Creamos el token con el ID del usuario
     access_token = create_access_token(identity=str(user.id))
 
     return jsonify({
@@ -124,11 +105,9 @@ def handle_login():
         "user_id": user.id,
         "name": user.name,
         "credits": user.wallet_credits
-        # Nota para el Front: USTEDES SACAN EL AVATAR DE  DiceBear usando el user.name
     }), 200
 
 
-# 3. PUBLICAR SKILL: Con imagen automática de Unsplash
 @api.route('/skills', methods=['POST'])
 @jwt_required()
 def add_skill():
@@ -138,16 +117,14 @@ def add_skill():
     if not body or "title" not in body:
         return jsonify({"msg": "El título es obligatorio"}), 400
 
-    # API EXTERNA: Generamos una imagen de Unsplash según la categoría
     category = body.get("category", "skills")
-    # Esta URL devuelve una imagen aleatoria profesional de esa temática
     unsplash_url = f"https://source.unsplash.com/featured/?{category.replace(' ', ',')}"
 
     new_skill = Skill(
         title=body["title"],
         description=body.get("description", ""),
-        credits_per_hour=body.get("credits_per_hour", 1),  # Por acuerdo de equipo
-        image_url=unsplash_url,  # Foto automática para que el Front se vea BIEN
+        credits_per_hour=body.get("credits_per_hour", 1),
+        image_url=unsplash_url,
         user_id=current_user_id
     )
 
@@ -162,7 +139,6 @@ def add_skill():
 @jwt_required()
 def get_profile():
     user_id = get_jwt_identity()
-
     user = User.query.get(user_id)
 
     if not user:
@@ -182,14 +158,12 @@ def update_profile():
 
     body = request.get_json() or {}
 
-    # Campos que puede actualizar el usuario
     new_name = body.get('name')
     new_email = body.get('email')
     new_bio = body.get('description') or body.get('bio')
     new_avatar = body.get('avatar_url')
     new_password = body.get('password')
 
-    # Si cambian el email, comprobar unicidad
     if new_email and new_email != user.email:
         exists = User.query.filter_by(email=new_email).first()
         if exists:
@@ -213,6 +187,7 @@ def update_profile():
     return jsonify(user.serialize()), 200
 
 
+# BLOQUE CORREGIDO: EDICIÓN DE SKILL
 @api.route('/skills/<int:skill_id>', methods=['PUT'])
 @jwt_required()
 def update_skill(skill_id):
@@ -222,16 +197,16 @@ def update_skill(skill_id):
     if not skill:
         return jsonify({"error": "Skill not found"}), 404
 
-    # Verificar que la skill pertenece al usuario autenticado
     if skill.user_id != int(user_id):
         return jsonify({"error": "Esta habilidad no pertenece al usuario"}), 403
 
-    # Leer datos del JSON
-    new_title = request.json.get("title")
-    new_description = request.json.get("description")
-    new_credits_per_hour = request.json.get("credits_per_hour")
+    # Lectura segura del body para evitar error 500 si no se envían datos correctamente
+    body = request.get_json(silent=True) or {}
 
-    # Actualizar campos si vienen en el JSON
+    new_title = body.get("title")
+    new_description = body.get("description")
+    new_credits_per_hour = body.get("credits_per_hour")
+
     if new_title:
         skill.title = new_title
 
@@ -241,13 +216,16 @@ def update_skill(skill_id):
     if new_credits_per_hour:
         skill.credits_per_hour = new_credits_per_hour
 
-    # Guardar cambios
     db.session.commit()
 
-    # Devolver la skill actualizada
-    return jsonify(skill.serialize()), 200
+    # IMPORTANTE: Ahora devuelve la key "skill" para que el frontend no estalle
+    return jsonify({
+        "msg": "Habilidad actualizada correctamente", 
+        "skill": skill.serialize()
+    }), 200
 
 
+# BLOQUE CORREGIDO: ELIMINACIÓN DE SKILL
 @api.route('/skills/<int:skill_id>', methods=['DELETE'])
 @jwt_required()
 def delete_skill(skill_id):
@@ -257,25 +235,22 @@ def delete_skill(skill_id):
     if not skill:
         return jsonify({"error": "Skill not found"}), 404
 
-    # Verificar que la skill pertenece al usuario autenticado
     if skill.user_id != int(user_id):
         return jsonify({"error": "Esta habilidad no pertenece al usuario"}), 403
 
     db.session.delete(skill)
     db.session.commit()
 
+    # El frontend espera 200 y mensaje de confirmación
     return jsonify({"msg": "Habilidad eliminada correctamente"}), 200
 
 
-# 4. TRANSACCIÓN: LOGICA DE INTERCAMBIO DE CREDITOS POR TIEMPO EN HBILIDAD
 @api.route('/book-session', methods=['POST'])
 @jwt_required()
 def book_session():
-    # El alumno es el que está logueado (sacamos su ID del token)
     student_id = get_jwt_identity()
     student = User.query.get(student_id)
 
-    # El profesor viene en el body enviado por el Front
     body = request.get_json()
     teacher_id = body.get("teacher_id")
 
@@ -284,7 +259,6 @@ def book_session():
 
     teacher = User.query.get(teacher_id)
 
-    # Validaciones de seguridad para no romper la economía
     if not teacher:
         return jsonify({"msg": "El profesor no existe"}), 404
 
@@ -294,11 +268,10 @@ def book_session():
     if student.wallet_credits < 1:
         return jsonify({"msg": "No tienes créditos. ¡Enseña algo para ganar más!"}), 402
 
-    # LÓGICA DE INTERCAMBIO
-    student.wallet_credits -= 1  # Restamos al alumno
-    teacher.wallet_credits += 1  # Sumamos al profe
+    student.wallet_credits -= 1 
+    teacher.wallet_credits += 1 
 
-    db.session.commit()  # Guardamos los cambios de ambos
+    db.session.commit() 
 
     return jsonify({
         "msg": "Intercambio realizado con éxito",
