@@ -2,7 +2,7 @@ import { useState } from "react";
 import "../ProfileForm.css";
 import skillbankAvatar from "../assets/img/SkillBank.png";
 
-export const ProfileForm = ({ user = {}, onSubmit }) => {
+export const ProfileForm = ({ user = {}, onSubmit, isRegister = false }) => {
   const [preview, setPreview] = useState(user.avatar_url || "");
   const [errors, setErrors] = useState("");
 
@@ -21,13 +21,15 @@ export const ProfileForm = ({ user = {}, onSubmit }) => {
     const password = formData.get("password");
     const confirm = formData.get("confirm_password");
 
-    // Validaciones de contraseña
-    if (password || confirm) {
-      if (password.length < 6) {
-        setErrors("La contraseña debe tener al menos 6 caracteres.");
+    // Validación: 8 caracteres, letras y números
+    if (isRegister || password || confirm) {
+      const hasLetters = /[a-zA-Z]/.test(password);
+      const hasNumbers = /[0-9]/.test(password);
+
+      if (!password || password.length < 8 || !hasLetters || !hasNumbers) {
+        setErrors("La contraseña debe tener al menos 8 caracteres, incluyendo letras y números.");
         return;
       }
-
       if (password !== confirm) {
         setErrors("Las contraseñas no coinciden.");
         return;
@@ -35,10 +37,10 @@ export const ProfileForm = ({ user = {}, onSubmit }) => {
     }
 
     const updatedUser = {
-      name: formData.get("name"),
+      name: isRegister ? "Nuevo Usuario" : formData.get("name"),
       email: formData.get("email"),
-      description: formData.get("description"),
-      avatar_url: formData.get("avatar_url"),
+      description: isRegister ? "" : formData.get("description"),
+      avatar_url: isRegister ? "" : formData.get("avatar_url"),
       password: password || null,
     };
 
@@ -47,79 +49,52 @@ export const ProfileForm = ({ user = {}, onSubmit }) => {
 
   return (
     <form onSubmit={handleSubmit} className="skillbank-form">
+      {errors && (
+        <div className="form-error text-center text-danger mb-3" style={{ fontSize: "0.85rem", fontWeight: "600", backgroundColor: "rgba(239, 68, 68, 0.1)", padding: "8px", borderRadius: "6px" }}>
+          ⚠️ {errors}
+        </div>
+      )}
 
-      {errors && <p className="form-error">{errors}</p>}
-
-      {/* PREVIEW DEL AVATAR */}
-      <div className="avatar-preview-wrapper">
-        <img
-          src={preview || skillbankAvatar}
-          className="avatar-preview"
-        />
-
-      </div>
-
-      <div className="form-field">
-        <label>URL de la imagen</label>
-        <input
-          type="text"
-          name="avatar_url"
-          placeholder="https://imagen.com/avatar.png"
-          defaultValue={user.avatar_url || ""}
-          onChange={handleAvatarUrlChange}
-        />
-      </div>
-
-      <div className="form-field">
-        <label>Nombre</label>
-        <input
-          type="text"
-          name="name"
-          defaultValue={user.name || ""}
-          required
-        />
-      </div>
+      {!isRegister && (
+        <>
+          <div className="avatar-preview-wrapper">
+            <img src={preview || skillbankAvatar} className="avatar-preview" alt="Preview" />
+          </div>
+          <div className="form-field">
+            <label>URL de la imagen</label>
+            <input type="text" name="avatar_url" placeholder="https://..." defaultValue={user.avatar_url || ""} onChange={handleAvatarUrlChange} />
+          </div>
+          <div className="form-field">
+            <label>Nombre</label>
+            <input type="text" name="name" defaultValue={user.name || ""} required />
+          </div>
+        </>
+      )}
 
       <div className="form-field">
         <label>Email</label>
-        <input
-          type="email"
-          name="email"
-          defaultValue={user.email || ""}
-          required
-        />
+        <input type="email" name="email" defaultValue={user.email || ""} required />
+      </div>
+
+      {!isRegister && (
+        <div className="form-field">
+          <label>Biografía</label>
+          <textarea name="description" rows="3" defaultValue={user.description || ""} />
+        </div>
+      )}
+
+      <div className="form-field">
+        <label>{isRegister ? "Contraseña" : "Nueva contraseña"}</label>
+        <input type="password" name="password" placeholder="******" required={isRegister} />
       </div>
 
       <div className="form-field">
-        <label>Biografía</label>
-        <textarea
-          name="description"
-          rows="3"
-          defaultValue={user.description || ""}
-        />
+        <label>Confirmar {isRegister ? "contraseña" : "nueva contraseña"}</label>
+        <input type="password" name="confirm_password" placeholder="******" required={isRegister} />
       </div>
 
-      {/* CAMPOS DE CONTRASEÑA */}
-      <div className="form-field">
-        <label>Nueva contraseña</label>
-        <input
-          type="password"
-          name="password"
-          placeholder="******"
-        />
-      </div>
-
-      <div className="form-field">
-        <label>Confirmar nueva contraseña</label>
-        <input
-          type="password"
-          name="confirm_password"
-          placeholder="******"
-        />
-      </div>
-
-      <button type="submit" className="btn-pill form-submit">
-        CONFIRMAR
+      <button type="submit" className="btn-pill form-submit w-100 mt-2">
+        {isRegister ? "REGISTRARSE" : "CONFIRMAR CAMBIOS"}
       </button>
     </form>
   );
