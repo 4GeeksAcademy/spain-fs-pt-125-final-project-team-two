@@ -110,22 +110,22 @@
   width: 90%;
   max-width: 500px;
   color: #e5e7eb;
-  position: relative; /* allow absolutely positioned children */
+  position: relative; 
 }
 
-/* global close button style for modals */
+
 .btn-close {
   background: transparent;
   border: none;
   font-size: 1.5rem;
   line-height: 1;
-  color: #22c55e; /* match confirm button primary green */
-  /* remove bootstrap default X image */
+  color: #22c55e; 
+  
   background-image: none !important;
-  /* size to content */
+  
   width: auto;
   height: auto;
-  /* keep slight opacity for subtlety */
+  
   opacity: 0.6;
   transition: opacity 0.2s;
   cursor: pointer;
