@@ -16,52 +16,30 @@ export const Layout = () => {
 
   const handleRegisterSubmit = async (data) => {
     try {
-      const nameFromEmail = data.email ? data.email.split("@")[0] : "Usuario";
-      const payload = {
-        email: data.email,
-        password: data.password,
-        avatar_url: data.avatar_url,
-        name: nameFromEmail
-      };
-
       const response = await fetch(`${API_URL}/api/signup`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(payload)
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: data.name,
+          email: data.email,
+          password: data.password,
+          bio: data.description,
+          avatar_url: data.avatar_url
+        })
       });
 
-      if (!response.ok) {
-        console.error("Error al crear usuario");
-        return;
-      }
+      if (!response.ok) return;
 
       const result = await response.json();
-      console.log("RESULTADO DEL SIGNUP:", result);
-
-
-      const userObject = {
-        id: result.user_id,
-        email: data.email,
-        name: nameFromEmail,
-        avatar_url: data.avatar_url,
-        wallet_credits: result.credits
-      };
-
       dispatch({
         type: "login_success",
-        payload: {
-          token: result.token,
-          user: userObject
-        }
+        payload: { token: result.token, user: { id: result.user_id, name: result.name, email: data.email, wallet_credits: result.credits } }
       });
 
       setOpenRegister(false);
       navigate("/feed");
-
     } catch (error) {
-      console.error("Error en el POST:", error);
+      console.error("Error signup:", error);
     }
   };
 
@@ -70,17 +48,12 @@ export const Layout = () => {
       <Navbar onOpenRegister={() => setOpenRegister(true)} />
 
       {openRegister && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <button
-              className="btn-close position-absolute top-0 start-0 m-3"
-              onClick={() => setOpenRegister(false)}
-              aria-label="Cerrar"
-            >
-              ×
-            </button>
-            <ProfileForm onSubmit={handleRegisterSubmit} />
-          </div>
+        <div className="fixed-top w-100 h-100 d-flex justify-content-center align-items-center" style={{ background: "rgba(15, 23, 42, 0.8)", zIndex: 1050}} onClick={() => setOpenRegister(false)}>
+            <div className="p-4 rounded shadow-lg position-relative" style={{ backgroundColor: "#1e293b", width: "100%", maxWidth: "420px", border: "1px solid rgba(148, 163, 184, 0.2)" }} onClick={(e) => e.stopPropagation()}>
+                <button type="button" className="btn-close btn-close-white position-absolute top-0 end-0 m-3" onClick={() => setOpenRegister(false)}></button>
+                <h2 className="text-center mb-4" style={{ color: "#f8fafc" }}>Crear Cuenta</h2>
+                <ProfileForm onSubmit={handleRegisterSubmit} isRegister={true} />
+            </div>
         </div>
       )}
 
