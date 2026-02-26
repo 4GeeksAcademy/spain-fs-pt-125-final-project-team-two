@@ -6,7 +6,7 @@ import { API_URL } from "../../config.js";
 import "./../../front/InfoCard.css";
 import defaultCourseImg from "../../front/assets/img/infocard.png";
 
-function InfoCard({ id, title, shortText, fullText, img, user, updatedAt, creditsPerHour }) {
+function InfoCard({ id, title, shortText, fullText, img, user, updatedAt, creditsPerHour, user_id }) {
   const { store, dispatch } = useGlobalReducer();
   const [showContactModal, setShowContactModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -14,15 +14,18 @@ function InfoCard({ id, title, shortText, fullText, img, user, updatedAt, credit
 
   const displayImg = img || defaultCourseImg;
 
+  // Verificar si el usuario logeado es el propietario de la skill
+  const isOwner = store.user && store.user.id && user_id && store.user.id === user_id;
+
   const handleEdit = () => {
     // Si no hay ID, lo buscamos en el store o avisamos por consola para no romper la UI
     if (!id) {
       console.error("Error: InfoCard recibió id undefined. Revisa el componente padre.");
       return;
     }
-    dispatch({ 
-      type: "SET_SELECTED_ACTIVITY", 
-      payload: { id, title, description: shortText || fullText, credits_per_hour: creditsPerHour } 
+    dispatch({
+      type: "SET_SELECTED_ACTIVITY",
+      payload: { id, title, description: shortText || fullText, credits_per_hour: creditsPerHour }
     });
     dispatch({ type: "TOGGLE_POST_MODAL" });
   };
@@ -30,12 +33,12 @@ function InfoCard({ id, title, shortText, fullText, img, user, updatedAt, credit
   const executeDelete = async () => {
     if (!id) return;
     setIsDeleting(true);
-    
+
     try {
       const cleanBaseUrl = API_URL.replace(/\/+$/, "");
       const response = await fetch(`${cleanBaseUrl}/api/skills/${id}`, {
         method: "DELETE",
-        headers: { 
+        headers: {
           "Authorization": `Bearer ${store.token}`,
           "Content-Type": "application/json"
         }
@@ -56,22 +59,24 @@ function InfoCard({ id, title, shortText, fullText, img, user, updatedAt, credit
   return (
     <>
       <div className="skillbank-card shadow-sm text-center position-relative h-100 d-flex flex-column">
-        <div className="position-absolute" style={{ top: '15px', right: '15px', zIndex: 10, display: 'flex', gap: '8px' }}>
-          <button onClick={handleEdit} className="btn btn-sm text-secondary border-0" style={{ background: 'rgba(255,255,255,0.05)', borderRadius: '8px' }}>
-            <i className="fa-solid fa-pen-to-square"></i>
-          </button>
-          <button onClick={() => setShowDeleteModal(true)} className="btn btn-sm text-danger border-0" style={{ background: 'rgba(220, 38, 38, 0.1)', borderRadius: '8px' }}>
-            <i className="fa-solid fa-trash"></i>
-          </button>
-        </div>
+        {isOwner && (
+          <div className="position-absolute" style={{ top: '15px', right: '15px', zIndex: 10, display: 'flex', gap: '8px' }}>
+            <button onClick={handleEdit} className="btn btn-sm text-secondary border-0" style={{ background: 'rgba(255,255,255,0.05)', borderRadius: '8px' }}>
+              <i className="fa-solid fa-pen-to-square"></i>
+            </button>
+            <button onClick={() => setShowDeleteModal(true)} className="btn btn-sm text-danger border-0" style={{ background: 'rgba(220, 38, 38, 0.1)', borderRadius: '8px' }}>
+              <i className="fa-solid fa-trash"></i>
+            </button>
+          </div>
+        )}
 
         <div className="pt-4 d-flex justify-content-center">
           <div style={{ width: '100px', height: '100px', overflow: 'hidden', borderRadius: '50%', border: '3px solid #334155', background: '#0f172a' }}>
-            <img 
-              src={displayImg} 
-              alt={title} 
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
-              onError={(e) => { e.target.src = "https://api.dicebear.com/7.x/identicon/svg?seed=" + title; }} 
+            <img
+              src={displayImg}
+              alt={title}
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              onError={(e) => { e.target.src = "https://api.dicebear.com/7.x/identicon/svg?seed=" + title; }}
             />
           </div>
         </div>
@@ -95,7 +100,14 @@ function InfoCard({ id, title, shortText, fullText, img, user, updatedAt, credit
         </div>
       </div>
       <ContactModal show={showContactModal} onClose={() => setShowContactModal(false)} title={title} teacherName={user} />
-      <DeleteModal show={showDeleteModal} onClose={() => setShowDeleteModal(false)} onConfirm={executeDelete} loading={isDeleting} />
+      <DeleteModal
+        show={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        onConfirm={executeDelete}
+        loading={isDeleting}
+        title="Eliminar Curso"
+        message={`¿Confirma que desea eliminar el curso "${title}"?`}
+      />
     </>
   );
 }

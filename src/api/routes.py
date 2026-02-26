@@ -16,6 +16,8 @@ api = Blueprint('api', __name__)
 CORS(api)
 
 # Andri
+
+
 @api.route('/users', methods=['GET'])
 def get_users():
     users = User.query.all()
@@ -83,6 +85,8 @@ def handle_signup():
         "token": access_token,
         "user_id": new_user.id,
         "name": new_user.name,
+        "email": new_user.email,
+        "avatar_url": new_user.avatar_url,
         "credits": new_user.wallet_credits
     }), 201
 
@@ -104,6 +108,8 @@ def handle_login():
         "token": access_token,
         "user_id": user.id,
         "name": user.name,
+        "email": user.email,
+        "avatar_url": user.avatar_url,
         "credits": user.wallet_credits
     }), 200
 
@@ -187,6 +193,21 @@ def update_profile():
     return jsonify(user.serialize()), 200
 
 
+@api.route('/users/profile', methods=['DELETE'])
+@jwt_required()
+def delete_profile():
+    user_id = get_jwt_identity()
+    user = User.query.get(user_id)
+
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+
+    db.session.delete(user)
+    db.session.commit()
+
+    return jsonify({"msg": "Perfil eliminado correctamente"}), 200
+
+
 # BLOQUE CORREGIDO: EDICIÓN DE SKILL
 @api.route('/skills/<int:skill_id>', methods=['PUT'])
 @jwt_required()
@@ -220,7 +241,7 @@ def update_skill(skill_id):
 
     # IMPORTANTE: Ahora devuelve la key "skill" para que el frontend no estalle
     return jsonify({
-        "msg": "Habilidad actualizada correctamente", 
+        "msg": "Habilidad actualizada correctamente",
         "skill": skill.serialize()
     }), 200
 
@@ -268,10 +289,10 @@ def book_session():
     if student.wallet_credits < 1:
         return jsonify({"msg": "No tienes créditos. ¡Enseña algo para ganar más!"}), 402
 
-    student.wallet_credits -= 1 
-    teacher.wallet_credits += 1 
+    student.wallet_credits -= 1
+    teacher.wallet_credits += 1
 
-    db.session.commit() 
+    db.session.commit()
 
     return jsonify({
         "msg": "Intercambio realizado con éxito",

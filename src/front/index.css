@@ -10,11 +10,16 @@
   align-items: flex-start;
 }
 
-.profile-edit-btn {
+.profile-buttons-group {
   position: absolute;
   top: 1.5rem;
   right: 1.5rem;
+  display: flex;
+  gap: 8px;
+  z-index: 10;
+}
 
+.profile-edit-btn {
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(148, 163, 184, 0.4);
   border-radius: 999px;
@@ -110,22 +115,21 @@
   width: 90%;
   max-width: 500px;
   color: #e5e7eb;
-  position: relative; 
+  position: relative;
 }
-
 
 .btn-close {
   background: transparent;
   border: none;
   font-size: 1.5rem;
   line-height: 1;
-  color: #22c55e; 
-  
+  color: #22c55e;
+
   background-image: none !important;
-  
+
   width: auto;
   height: auto;
-  
+
   opacity: 0.6;
   transition: opacity 0.2s;
   cursor: pointer;

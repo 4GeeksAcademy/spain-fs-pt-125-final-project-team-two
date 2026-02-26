@@ -36,10 +36,16 @@ export const LoginModal = () => {
                 type: "login_success",
                 payload: {
                     token: data.token,
-                    user: data.user ?? null
+                    user: {
+                        id: data.user_id,
+                        name: data.name,
+                        email: data.email,
+                        avatar_url: data.avatar_url,
+                        wallet_credits: data.credits
+                    }
                 },
             });
-            
+
             try {
                 if (!data.user) {
                     const token = data.token || localStorage.getItem("token");
@@ -68,7 +74,7 @@ export const LoginModal = () => {
     };
 
     return (
-        <div 
+        <div
             className="fixed-top w-100 h-100 d-flex justify-content-center align-items-center"
             style={{ background: "rgba(15, 23, 42, 0.8)", zIndex: 1050 }}
             onClick={() => dispatch({ type: "TOGGLE_LOGIN_MODAL" })}
@@ -91,7 +97,7 @@ export const LoginModal = () => {
 
                 <h2 className="text-center mb-4" style={{ color: "#f8fafc" }}>Bienvenido de nuevo</h2>
                 <form className="skillbank-form" onSubmit={handleLogin}>
-                    
+
                     {/* Estilo de error actualizado */}
                     {error && (
                         <div className="form-error text-center text-danger mb-3" style={{ fontSize: "0.9rem", fontWeight: "600" }}>

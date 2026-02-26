@@ -7,15 +7,19 @@ export const ProfileForm = ({ user = {}, onSubmit, isRegister = false }) => {
 
   const [preview, setPreview] = useState(user.avatar_url || "");
   const [errors, setErrors] = useState("");
+  const [description, setDescription] = useState(user.description || "");
 
   useEffect(() => {
+
     if (isEditing && user.avatar_url) {
       setPreview(user.avatar_url);
-    } else {
-      const randomSeed = Math.random().toString(36).substring(2);
-      const url = `https://api.dicebear.com/9.x/croodles/svg?seed=${randomSeed}`;
-      setPreview(url);
+      return;
     }
+
+
+    const randomSeed = Math.random().toString(36).substring(2);
+    const url = `https://api.dicebear.com/9.x/croodles/svg?seed=${randomSeed}`;
+    setPreview(url);
   }, [isEditing, user.avatar_url]);
 
   const handleAvatarUrlChange = (e) => {
@@ -32,7 +36,7 @@ export const ProfileForm = ({ user = {}, onSubmit, isRegister = false }) => {
     const password = formData.get("password");
     const confirm = formData.get("confirm_password");
 
-    // Validación de contraseña
+
     if (isRegister || password || confirm) {
       const hasLetters = /[a-zA-Z]/.test(password);
       const hasNumbers = /[0-9]/.test(password);
@@ -47,22 +51,21 @@ export const ProfileForm = ({ user = {}, onSubmit, isRegister = false }) => {
       }
     }
 
+    // Preparar datos del usuario
+    let avatarUrl = isRegister ? preview : formData.get("avatar_url");
+
+    // Si es edición y el campo de avatar está vacío, mantener la URL actual
+    if (!isRegister && !avatarUrl) {
+      avatarUrl = user.avatar_url || preview;
+    }
+
     const updatedUser = {
-      name: isRegister ? "Nuevo Usuario" : formData.get("name"),
+      name: formData.get("name") || (isRegister ? formData.get("email").split("@")[0] : "Usuario"),
       email: formData.get("email"),
-      description: isRegister ? "" : formData.get("description"),
-      avatar_url: isRegister ? "" : formData.get("avatar_url"),
+      description: description,
+      avatar_url: avatarUrl,
       password: password || null,
     };
-
-    if (isEditing) {
-      updatedUser.name = formData.get("name");
-      updatedUser.description = formData.get("description");
-      updatedUser.avatar_url = formData.get("avatar_url") || preview;
-    } else {
-      updatedUser.name = updatedUser.email ? updatedUser.email.split("@")[0] : "Usuario";
-      updatedUser.avatar_url = preview;
-    }
 
     onSubmit(updatedUser);
   };
@@ -84,16 +87,18 @@ export const ProfileForm = ({ user = {}, onSubmit, isRegister = false }) => {
         </div>
       )}
 
+
+      <div className="avatar-preview-wrapper">
+        <img
+          src={preview || skillbankAvatar}
+          className="avatar-preview"
+          alt="Avatar"
+        />
+      </div>
+
+
       {!isRegister && (
         <>
-          <div className="avatar-preview-wrapper">
-            <img
-              src={preview || skillbankAvatar}
-              className="avatar-preview"
-              alt="Preview"
-            />
-          </div>
-
           <div className="form-field">
             <label>URL de la imagen</label>
             <input
@@ -120,7 +125,7 @@ export const ProfileForm = ({ user = {}, onSubmit, isRegister = false }) => {
       {!isRegister && (
         <div className="form-field">
           <label>Biografía</label>
-          <textarea name="description" rows="3" defaultValue={user.description || ""} />
+          <textarea name="description" rows="3" placeholder="Aquí puedes contarnos algo sobre ti" value={description} onChange={(e) => setDescription(e.target.value)} />
         </div>
       )}
 

@@ -33,7 +33,7 @@ export const Layout = () => {
       const result = await response.json();
       dispatch({
         type: "login_success",
-        payload: { token: result.token, user: { id: result.user_id, name: result.name, email: data.email, wallet_credits: result.credits } }
+        payload: { token: result.token, user: { id: result.user_id, name: result.name, email: result.email, avatar_url: result.avatar_url, wallet_credits: result.credits } }
       });
 
       setOpenRegister(false);
@@ -48,12 +48,12 @@ export const Layout = () => {
       <Navbar onOpenRegister={() => setOpenRegister(true)} />
 
       {openRegister && (
-        <div className="fixed-top w-100 h-100 d-flex justify-content-center align-items-center" style={{ background: "rgba(15, 23, 42, 0.8)", zIndex: 1050}} onClick={() => setOpenRegister(false)}>
-            <div className="p-4 rounded shadow-lg position-relative" style={{ backgroundColor: "#1e293b", width: "100%", maxWidth: "420px", border: "1px solid rgba(148, 163, 184, 0.2)" }} onClick={(e) => e.stopPropagation()}>
-                <button type="button" className="btn-close btn-close-white position-absolute top-0 end-0 m-3" onClick={() => setOpenRegister(false)}></button>
-                <h2 className="text-center mb-4" style={{ color: "#f8fafc" }}>Crear Cuenta</h2>
-                <ProfileForm onSubmit={handleRegisterSubmit} isRegister={true} />
-            </div>
+        <div className="fixed-top w-100 h-100 d-flex justify-content-center align-items-center" style={{ background: "rgba(15, 23, 42, 0.8)", zIndex: 1050 }} onClick={() => setOpenRegister(false)}>
+          <div className="p-4 rounded shadow-lg position-relative" style={{ backgroundColor: "#1e293b", width: "100%", maxWidth: "420px", border: "1px solid rgba(148, 163, 184, 0.2)" }} onClick={(e) => e.stopPropagation()}>
+            <button type="button" className="btn-close btn-close-white position-absolute top-0 end-0 m-3" onClick={() => setOpenRegister(false)}></button>
+            <h2 className="text-center mb-4" style={{ color: "#f8fafc" }}>Crear Cuenta</h2>
+            <ProfileForm onSubmit={handleRegisterSubmit} isRegister={true} />
+          </div>
         </div>
       )}
 
