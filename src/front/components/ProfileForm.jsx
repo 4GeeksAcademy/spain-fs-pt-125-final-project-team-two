@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import "../ProfileForm.css";
 import skillbankAvatar from "../assets/img/SkillBank.png";
 
-export const ProfileForm = ({ user = {}, onSubmit, isRegister = false }) => {
+export const ProfileForm = ({ user = {}, onSubmit, isRegister = false, externalError = "" }) => {
   const isEditing = Boolean(user && user.id);
 
   const [preview, setPreview] = useState(user.avatar_url || "");
@@ -72,7 +72,7 @@ export const ProfileForm = ({ user = {}, onSubmit, isRegister = false }) => {
 
   return (
     <form onSubmit={handleSubmit} className="skillbank-form">
-      {errors && (
+      {(errors || externalError) && (
         <div
           className="form-error text-center text-danger mb-3"
           style={{
@@ -83,7 +83,7 @@ export const ProfileForm = ({ user = {}, onSubmit, isRegister = false }) => {
             borderRadius: "6px"
           }}
         >
-          ⚠️ {errors}
+          ⚠️ {errors || externalError}
         </div>
       )}
 
