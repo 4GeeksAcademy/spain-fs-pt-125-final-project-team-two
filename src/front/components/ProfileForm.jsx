@@ -1,14 +1,29 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "../ProfileForm.css";
 import skillbankAvatar from "../assets/img/SkillBank.png";
 
-export const ProfileForm = ({ user = {}, onSubmit, isRegister = false }) => {
+export const ProfileForm = ({ user = {}, onSubmit, isRegister = false, externalError = "" }) => {
+  const isEditing = Boolean(user && user.id);
+
   const [preview, setPreview] = useState(user.avatar_url || "");
   const [errors, setErrors] = useState("");
+  const [description, setDescription] = useState(user.description || "");
+
+  useEffect(() => {
+
+    if (isEditing && user.avatar_url) {
+      setPreview(user.avatar_url);
+      return;
+    }
+
+
+    const randomSeed = Math.random().toString(36).substring(2);
+    const url = `https://api.dicebear.com/9.x/croodles/svg?seed=${randomSeed}`;
+    setPreview(url);
+  }, [isEditing, user.avatar_url]);
 
   const handleAvatarUrlChange = (e) => {
-    const url = e.target.value;
-    setPreview(url);
+    setPreview(e.target.value);
   };
 
   const handleSubmit = (e) => {
@@ -21,7 +36,7 @@ export const ProfileForm = ({ user = {}, onSubmit, isRegister = false }) => {
     const password = formData.get("password");
     const confirm = formData.get("confirm_password");
 
-    // Validación: 8 caracteres, letras y números
+
     if (isRegister || password || confirm) {
       const hasLetters = /[a-zA-Z]/.test(password);
       const hasNumbers = /[0-9]/.test(password);
@@ -36,11 +51,19 @@ export const ProfileForm = ({ user = {}, onSubmit, isRegister = false }) => {
       }
     }
 
+    // Preparar datos del usuario
+    let avatarUrl = isRegister ? preview : formData.get("avatar_url");
+
+    // Si es edición y el campo de avatar está vacío, mantener la URL actual
+    if (!isRegister && !avatarUrl) {
+      avatarUrl = user.avatar_url || preview;
+    }
+
     const updatedUser = {
-      name: isRegister ? "Nuevo Usuario" : formData.get("name"),
+      name: formData.get("name") || (isRegister ? formData.get("email").split("@")[0] : "Usuario"),
       email: formData.get("email"),
-      description: isRegister ? "" : formData.get("description"),
-      avatar_url: isRegister ? "" : formData.get("avatar_url"),
+      description: description,
+      avatar_url: avatarUrl,
       password: password || null,
     };
 
@@ -49,21 +72,44 @@ export const ProfileForm = ({ user = {}, onSubmit, isRegister = false }) => {
 
   return (
     <form onSubmit={handleSubmit} className="skillbank-form">
-      {errors && (
-        <div className="form-error text-center text-danger mb-3" style={{ fontSize: "0.85rem", fontWeight: "600", backgroundColor: "rgba(239, 68, 68, 0.1)", padding: "8px", borderRadius: "6px" }}>
-          ⚠️ {errors}
+      {(errors || externalError) && (
+        <div
+          className="form-error text-center text-danger mb-3"
+          style={{
+            fontSize: "0.85rem",
+            fontWeight: "600",
+            backgroundColor: "rgba(239, 68, 68, 0.1)",
+            padding: "8px",
+            borderRadius: "6px"
+          }}
+        >
+          ⚠️ {errors || externalError}
         </div>
       )}
 
+
+      <div className="avatar-preview-wrapper">
+        <img
+          src={preview || skillbankAvatar}
+          className="avatar-preview"
+          alt="Avatar"
+        />
+      </div>
+
+
       {!isRegister && (
         <>
-          <div className="avatar-preview-wrapper">
-            <img src={preview || skillbankAvatar} className="avatar-preview" alt="Preview" />
-          </div>
           <div className="form-field">
             <label>URL de la imagen</label>
-            <input type="text" name="avatar_url" placeholder="https://..." defaultValue={user.avatar_url || ""} onChange={handleAvatarUrlChange} />
+            <input
+              type="text"
+              name="avatar_url"
+              placeholder="https://..."
+              defaultValue={user.avatar_url || ""}
+              onChange={handleAvatarUrlChange}
+            />
           </div>
+
           <div className="form-field">
             <label>Nombre</label>
             <input type="text" name="name" defaultValue={user.name || ""} required />
@@ -79,7 +125,7 @@ export const ProfileForm = ({ user = {}, onSubmit, isRegister = false }) => {
       {!isRegister && (
         <div className="form-field">
           <label>Biografía</label>
-          <textarea name="description" rows="3" defaultValue={user.description || ""} />
+          <textarea name="description" rows="3" placeholder="Aquí puedes contarnos algo sobre ti" value={description} onChange={(e) => setDescription(e.target.value)} />
         </div>
       )}
 

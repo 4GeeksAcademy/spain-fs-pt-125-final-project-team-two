@@ -48,6 +48,7 @@ export const Feed = () => {
                   fullText={skill.description}
                   img={skill.image_url || PredefinedIMG}
                   user={`Usuario #${skill.user_id}`}
+                  user_id={skill.user_id}
                   updatedAt="Recientemente"
                   creditsPerHour={skill.credits_per_hour}
                 />

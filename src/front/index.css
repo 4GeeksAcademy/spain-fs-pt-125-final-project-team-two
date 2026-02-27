@@ -1,4 +1,3 @@
-
 .profile-page {
   width: 100%;
   min-height: calc(100vh - 80px);
@@ -11,20 +10,27 @@
   align-items: flex-start;
 }
 
-
-.profile-edit-btn {
+.profile-buttons-group {
   position: absolute;
   top: 1.5rem;
   right: 1.5rem;
+  display: flex;
+  gap: 8px;
+  z-index: 10;
+}
 
+.profile-edit-btn {
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(148, 163, 184, 0.4);
   border-radius: 999px;
   padding: 0.55rem 0.7rem;
   cursor: pointer;
 
-  transition: background-color 150ms ease, transform 120ms ease,
-    box-shadow 150ms ease, border-color 150ms ease;
+  transition:
+    background-color 150ms ease,
+    transform 120ms ease,
+    box-shadow 150ms ease,
+    border-color 150ms ease;
 }
 
 .profile-edit-btn i {
@@ -39,12 +45,10 @@
   box-shadow: 0 10px 25px rgba(15, 23, 42, 0.45);
 }
 
-
 .profile-content {
   max-width: 600px;
   text-align: center;
 }
-
 
 .profile-avatar {
   width: 160px;
@@ -56,7 +60,6 @@
   box-shadow: 0 10px 30px rgba(15, 23, 42, 0.55);
 }
 
-
 .profile-name {
   font-size: 2.2rem;
   font-weight: 700;
@@ -64,13 +67,11 @@
   margin-bottom: 0.4rem;
 }
 
-
 .profile-email {
   font-size: 1rem;
   color: #94a3b8;
   margin-bottom: 1.2rem;
 }
-
 
 .profile-bio {
   font-size: 1rem;
@@ -78,7 +79,6 @@
   line-height: 1.55;
   margin-bottom: 2rem;
 }
-
 
 @media (max-width: 600px) {
   .profile-page {
@@ -99,7 +99,6 @@
   }
 }
 
-
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -116,17 +115,30 @@
   width: 90%;
   max-width: 500px;
   color: #e5e7eb;
+  position: relative;
 }
 
-.modal-close {
-  margin-top: 1rem;
-  background: #22c55e;
+.btn-close {
+  background: transparent;
   border: none;
-  padding: 0.6rem 1rem;
-  border-radius: 8px;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: #22c55e;
+
+  background-image: none !important;
+
+  width: auto;
+  height: auto;
+
+  opacity: 0.6;
+  transition: opacity 0.2s;
   cursor: pointer;
+  padding: 0.25rem;
 }
 
+.btn-close:hover {
+  opacity: 1;
+}
 
 .feed-page {
   width: 100%;
@@ -196,4 +208,3 @@
     font-size: 1.2rem;
   }
 }
-
