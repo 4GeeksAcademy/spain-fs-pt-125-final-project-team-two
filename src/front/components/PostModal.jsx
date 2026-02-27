@@ -34,6 +34,9 @@ function PostModal() {
     if (loading) return;
     setLoading(true);
 
+    const randomId = Math.floor(Math.random() * 5000);
+    const diceBearUrl = `https://api.dicebear.com/7.x/adventurer/svg?seed=${randomId}`;
+
     try {
       const cleanBaseUrl = API_URL.replace(/\/+$/, "");
       const endpoint = isEditing 
@@ -50,22 +53,24 @@ function PostModal() {
           title: formData.title,
           description: formData.description,
           credits_per_hour: parseInt(formData.creditsPerHour),
+          image_url: diceBearUrl, 
           category: "education learning"
         })
       });
 
       if (!response.ok) throw new Error("Error en servidor");
       const data = await response.json();
+      const newSkill = data.skill || data;
 
       const updatedActivities = isEditing
-        ? store.activities.map(act => act.id === store.selectedActivity.id ? data.skill : act)
-        : [data.skill, ...store.activities];
+        ? store.activities.map(act => act.id === store.selectedActivity.id ? newSkill : act)
+        : [newSkill, ...store.activities];
 
       dispatch({ type: "SET_ACTIVITIES", payload: updatedActivities });
       handleClose();
 
     } catch (error) {
-      console.error("Error:", error);
+      console.error(error);
     } finally {
       setLoading(false);
     }
@@ -78,7 +83,7 @@ function PostModal() {
           <h5 className="modal-title fw-bold">{isEditing ? "Editar mi Curso" : "Publicar Nuevo Curso"}</h5>
           <button type="button" className="btn-close" onClick={handleClose}></button>
         </div>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="modal-form-container">
           <div className="modal-body text-start">
             <div className="mb-3">
               <label className="form-label fw-semibold">Título</label>
@@ -95,7 +100,7 @@ function PostModal() {
           </div>
           <div className="modal-footer">
             <button type="button" className="btn btn-ghost" onClick={handleClose} disabled={loading}>Cancelar</button>
-            <button type="submit" className="btn btn-pill btn-primary" disabled={loading}>
+            <button type="submit" className="btn btn-primary px-4" disabled={loading}>
               {loading ? "Procesando..." : (isEditing ? "Confirmar Cambios" : "Confirmar y Publicar")}
             </button>
           </div>

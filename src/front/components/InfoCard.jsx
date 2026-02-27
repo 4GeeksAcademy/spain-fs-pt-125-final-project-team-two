@@ -16,7 +16,7 @@ function InfoCard({ skill, isOwner }) {
   const handleEdit = () => {
     dispatch({ 
       type: "SET_SELECTED_ACTIVITY", 
-      payload: { id, title, description, credits_per_hour } 
+      payload: { id, title, description, credits_per_hour, image_url } 
     });
     dispatch({ type: "TOGGLE_POST_MODAL" });
   };
@@ -38,8 +38,6 @@ function InfoCard({ skill, isOwner }) {
   return (
     <>
       <div className="skillbank-card shadow-sm text-center position-relative h-100 d-flex flex-column" style={{ border: isOwner ? '1px solid #3b82f6' : '1px solid rgba(148, 163, 184, 0.1)' }}>
-        
-        {/* Solo mostramos edición/borrado si soy el dueño */}
         {isOwner && (
           <div className="position-absolute" style={{ top: '15px', right: '15px', zIndex: 10, display: 'flex', gap: '8px' }}>
             <button onClick={handleEdit} className="btn btn-sm text-secondary border-0" style={{ background: 'rgba(255,255,255,0.05)' }}>
@@ -53,7 +51,12 @@ function InfoCard({ skill, isOwner }) {
 
         <div className="pt-4 d-flex justify-content-center">
           <div style={{ width: '100px', height: '100px', overflow: 'hidden', borderRadius: '50%', border: '3px solid #334155', background: '#0f172a' }}>
-            <img src={image_url || defaultCourseImg} alt={title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            <img 
+              src={image_url && image_url.startsWith('http') ? image_url : defaultCourseImg} 
+              alt={title} 
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              onError={(e) => { e.target.src = defaultCourseImg; }}
+            />
           </div>
         </div>
 
@@ -69,8 +72,6 @@ function InfoCard({ skill, isOwner }) {
                 <i className="fa-solid fa-coins me-2"></i><strong>{credits_per_hour} créditos / h</strong>
               </span>
             </p>
-            
-            {/* Solo mostramos "Coordinar Clase" si NO soy el dueño */}
             {!isOwner && (
               <button className="btn btn-primary btn-pill w-100 fw-semibold" onClick={() => setShowContactModal(true)}>Coordinar Clase</button>
             )}
