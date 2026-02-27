@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import useGlobalReducer from "../hooks/useGlobalReducer";
 import { API_URL } from "../../config.js";
-// Importamos la imagen por defecto para tenerla lista si el usuario no tiene avatar
-import PredefinedIMG from "../assets/img/PredefinedIMG.jpg"; 
 import "./../../front/PostModal.css";
 
 function PostModal() {
@@ -36,8 +34,8 @@ function PostModal() {
     if (loading) return;
     setLoading(true);
 
-    // LÓGICA DE IMAGEN: Prioridad 1: Avatar del usuario, Prioridad 2: Sombrerito
-    const finalImageUrl = store.user?.avatar_url || PredefinedIMG;
+    const randomId = Math.floor(Math.random() * 5000);
+    const diceBearUrl = `https://api.dicebear.com/7.x/adventurer/svg?seed=${randomId}`;
 
     try {
       const cleanBaseUrl = API_URL.replace(/\/+$/, "");
@@ -55,23 +53,24 @@ function PostModal() {
           title: formData.title,
           description: formData.description,
           credits_per_hour: parseInt(formData.creditsPerHour),
-          image_url: finalImageUrl, // <--- Aquí inyectamos la imagen ganadora
+          image_url: diceBearUrl, 
           category: "education learning"
         })
       });
 
       if (!response.ok) throw new Error("Error en servidor");
       const data = await response.json();
+      const newSkill = data.skill || data;
 
       const updatedActivities = isEditing
-        ? store.activities.map(act => act.id === store.selectedActivity.id ? data.skill : act)
-        : [data.skill, ...store.activities];
+        ? store.activities.map(act => act.id === store.selectedActivity.id ? newSkill : act)
+        : [newSkill, ...store.activities];
 
       dispatch({ type: "SET_ACTIVITIES", payload: updatedActivities });
       handleClose();
 
     } catch (error) {
-      console.error("Error:", error);
+      console.error(error);
     } finally {
       setLoading(false);
     }
