@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import useGlobalReducer from "../hooks/useGlobalReducer";
 import { API_URL } from "../../config.js";
+// Importamos la imagen por defecto para tenerla lista si el usuario no tiene avatar
+import PredefinedIMG from "../assets/img/PredefinedIMG.jpg"; 
 import "./../../front/PostModal.css";
 
 function PostModal() {
@@ -34,6 +36,9 @@ function PostModal() {
     if (loading) return;
     setLoading(true);
 
+    // LÓGICA DE IMAGEN: Prioridad 1: Avatar del usuario, Prioridad 2: Sombrerito
+    const finalImageUrl = store.user?.avatar_url || PredefinedIMG;
+
     try {
       const cleanBaseUrl = API_URL.replace(/\/+$/, "");
       const endpoint = isEditing 
@@ -50,6 +55,7 @@ function PostModal() {
           title: formData.title,
           description: formData.description,
           credits_per_hour: parseInt(formData.creditsPerHour),
+          image_url: finalImageUrl, // <--- Aquí inyectamos la imagen ganadora
           category: "education learning"
         })
       });
@@ -78,7 +84,7 @@ function PostModal() {
           <h5 className="modal-title fw-bold">{isEditing ? "Editar mi Curso" : "Publicar Nuevo Curso"}</h5>
           <button type="button" className="btn-close" onClick={handleClose}></button>
         </div>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="modal-form-container">
           <div className="modal-body text-start">
             <div className="mb-3">
               <label className="form-label fw-semibold">Título</label>
@@ -95,7 +101,7 @@ function PostModal() {
           </div>
           <div className="modal-footer">
             <button type="button" className="btn btn-ghost" onClick={handleClose} disabled={loading}>Cancelar</button>
-            <button type="submit" className="btn btn-pill btn-primary" disabled={loading}>
+            <button type="submit" className="btn btn-primary px-4" disabled={loading}>
               {loading ? "Procesando..." : (isEditing ? "Confirmar Cambios" : "Confirmar y Publicar")}
             </button>
           </div>
