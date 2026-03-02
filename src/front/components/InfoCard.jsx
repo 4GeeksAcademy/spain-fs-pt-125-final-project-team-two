@@ -61,7 +61,10 @@ function InfoCard({ skill, isOwner }) {
         </div>
 
         <div className="card-body d-flex flex-column flex-grow-1">
-          <p className="text-uppercase fw-bold mb-1" style={{ fontSize: '0.7rem', color: isOwner ? '#3b82f6' : '#94a3b8' }}>{isOwner ? "Tu Curso" : "Curso"}</p>
+          <p className="text-uppercase fw-bold mb-1" style={{ fontSize: '0.7rem', color: isOwner ? '#3b82f6' : '#94a3b8' }}>
+            {/* AQUÍ ESTÁ EL NOMBRE DEL CREADOR COMO PIDIÓ EL PROFESOR */}
+            {isOwner ? "Tu Curso" : `Por: ${user_name || "Compañero"}`}
+          </p>
           <h5 className="card-title fw-bold text-white">{title}</h5>
           <div className="text-start my-3 flex-grow-1">
             <p className="card-text text-light" style={{ fontSize: '0.9rem' }}>{description}</p>
