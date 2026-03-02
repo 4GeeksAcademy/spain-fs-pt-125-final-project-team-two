@@ -123,7 +123,7 @@ export const Profile = () => {
                 + Agregar Habilidad
               </button>
             </div>
-            
+
             <div className="table-responsive bg-dark p-3 rounded" style={{ backgroundColor: "#1e293b !important", border: "1px solid rgba(148, 163, 184, 0.2)" }}>
               <table className="table table-dark table-borderless table-sm mb-0">
                 <thead>
@@ -182,7 +182,9 @@ export const Profile = () => {
                 className="btn-close btn-close-white position-absolute top-0 end-0 m-3"
                 onClick={() => setOpen(false)}
                 disabled={saving}
-              ></button>
+              >
+                ×
+              </button>
               <h2 className="text-center mb-4 text-white">Editar Perfil</h2>
               {error && <p className="text-danger text-center">{error}</p>}
               <ProfileForm user={userData} onSubmit={handleSubmit} isRegister={false} />

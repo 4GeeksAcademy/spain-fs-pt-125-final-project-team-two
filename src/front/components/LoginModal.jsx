@@ -93,7 +93,9 @@ export const LoginModal = () => {
                     className="btn-close btn-close-white position-absolute top-0 end-0 m-3"
                     onClick={() => dispatch({ type: "TOGGLE_LOGIN_MODAL" })}
                     aria-label="Close"
-                ></button>
+                >
+                    ×
+                </button>
 
                 <h2 className="text-center mb-4" style={{ color: "#f8fafc" }}>Bienvenido de nuevo</h2>
                 <form className="skillbank-form" onSubmit={handleLogin}>

@@ -140,6 +140,14 @@
   opacity: 1;
 }
 
+/* variante blanca para botones cerrar en modales oscuros */
+.btn-close-white {
+  color: #f8fafc !important;
+}
+.btn-close-white:hover {
+  opacity: 1;
+}
+
 .feed-page {
   width: 100%;
   min-height: calc(100vh - 80px);
