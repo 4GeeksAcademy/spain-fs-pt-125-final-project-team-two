@@ -1,0 +1,131 @@
+.skillbank-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  padding: 1rem;
+  color: #e5e7eb;
+  max-height: 70vh;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+.skillbank-form::-webkit-scrollbar {
+  width: 8px;
+}
+
+.skillbank-form::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.4);
+  border-radius: 999px;
+}
+
+.skillbank-form::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.6);
+}
+
+.skillbank-form .form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.skillbank-form .form-field label {
+  font-size: 0.9rem;
+  color: #cbd5e1;
+}
+
+.skillbank-form input,
+.skillbank-form textarea {
+  border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  background-color: rgba(15, 23, 42, 0.9);
+  color: #f9fafb;
+  padding: 0.7rem 1rem;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.skillbank-form input:focus,
+.skillbank-form textarea:focus {
+  border-color: rgba(56, 189, 248, 0.9);
+  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.35);
+  outline: none;
+}
+
+.skillbank-form .form-error {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  color: #fca5a5;
+  font-size: 0.9rem;
+}
+
+.skillbank-form .avatar-preview-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.skillbank-form .avatar-preview {
+  width: 120px;
+  height: 120px;
+  border-radius: 999px;
+  object-fit: cover;
+  border: 3px solid rgba(148, 163, 184, 0.4);
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.55);
+  margin-bottom: 0.5rem;
+}
+
+.skillbank-form .form-submit {
+  margin-top: 0.5rem;
+  padding: 0.8rem 1.2rem;
+  border-radius: 999px;
+  background: linear-gradient(120deg, #22c55e, #0ea5e9);
+  border: none;
+  color: #020617;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 120ms ease, box-shadow 150ms ease;
+}
+
+.skillbank-form .form-submit:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.55);
+}
+/* Contenedor principal del perfil (Banner superior) */
+.profile-page {
+  background-color: #1e293b; /* El mismo fondo oscuro de los dropdowns y modales */
+  border: 1px solid rgba(148, 163, 184, 0.2); /* Borde sutil */
+  border-radius: 16px;
+  padding: 2.5rem 2rem;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.3);
+  position: relative;
+  transition: box-shadow 150ms ease;
+}
+
+/* Ajustes para los botones de edición/borrar dentro de ese contenedor oscuro */
+.profile-page .profile-buttons-group {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  display: flex;
+  gap: 8px;
+}
+
+.profile-page .profile-edit-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: none;
+  color: #94a3b8;
+  padding: 0.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.profile-page .profile-edit-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #f8fafc;
+}
+
+.profile-page .profile-edit-btn[title="Eliminar perfil"]:hover {
+  background: rgba(239, 68, 68, 0.15); /* Rojo sutil al pasar el ratón */
+  color: #ef4444;
+}

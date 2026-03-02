@@ -1,18 +1,23 @@
 import os
-import inspect
 from flask_admin import Admin
-from . import models
-from .models import db
 from flask_admin.contrib.sqla import ModelView
 from flask_admin.theme import Bootstrap4Theme
 
+# Importamos todos los modelos para que el admin los reconozca
+from .models import db, User, Skill, Exchange
 
 def setup_admin(app):
+    # Config de seguridad básica, evita que cualquiera entre al admin
     app.secret_key = os.environ.get('FLASK_APP_KEY', 'sample key')
-    admin = Admin(app, name='4Geeks Admin', theme=Bootstrap4Theme(swatch='cerulean'))
+    
+    # Config visual del panel 
+    admin = Admin(
+        app, 
+        name='SkillBank Admin Panel', 
+        theme=Bootstrap4Theme(swatch='cerulean')
+    )
 
-    # Dynamically add all models to the admin interface
-    for name, obj in inspect.getmembers(models):
-        # Verify that the object is a SQLAlchemy model before adding it to the admin. 
-        if inspect.isclass(obj) and issubclass(obj, db.Model):
-            admin.add_view(ModelView(obj, db.session))
+    # Añadimos las vistas para poder editar todo desde la web
+    admin.add_view(ModelView(User, db.session))
+    admin.add_view(ModelView(Skill, db.session))
+    admin.add_view(ModelView(Exchange, db.session))

@@ -1,0 +1,201 @@
+.skillbank-banner {
+  padding-top: 3.5rem;
+  padding-bottom: 4.5rem;
+}
+
+.skillbank-banner .container {
+  max-width: 1120px;
+}
+
+.badge-soft {
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.06);
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  backdrop-filter: blur(10px);
+}
+
+.badge-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: radial-gradient(circle at 30% 30%, #bbf7d0, #22c55e);
+  box-shadow: 0 0 12px rgba(34, 197, 94, 0.9);
+}
+
+.badge-text {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #4b5563;
+}
+
+.banner-title {
+  font-size: clamp(2.1rem, 2.5vw + 1.6rem, 2.9rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: #0f172a;
+}
+
+.highlight-gradient {
+  background: linear-gradient(120deg, #22c55e, #0ea5e9);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.banner-subtitle {
+  max-width: 34rem;
+  color: #4b5563;
+  font-size: 0.98rem;
+}
+
+.banner-metrics {
+  font-size: 0.82rem;
+}
+
+.metric-pill {
+  padding: 0.5rem 0.9rem;
+  border-radius: 999px;
+  background-color: #ffffff;
+  border: 1px solid rgba(209, 213, 219, 0.9);
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35rem;
+}
+
+.metric-number {
+  font-weight: 600;
+  color: #111827;
+}
+
+.metric-label {
+  color: #6b7280;
+}
+
+.banner-card {
+  position: relative;
+  margin-inline: auto;
+  max-width: 360px;
+  aspect-ratio: 4 / 3;
+  border-radius: 1.75rem;
+  background: radial-gradient(circle at top left, #0f172a, #020617);
+  overflow: hidden;
+  padding: 1.4rem;
+  box-shadow: 0 24px 70px rgba(15, 23, 42, 0.75);
+}
+
+.banner-orbit {
+  position: absolute;
+  inset: -40%;
+  border-radius: 999px;
+  border: 1px dashed rgba(148, 163, 184, 0.2);
+  opacity: 0.4;
+}
+
+.banner-orbit.inner {
+  inset: -15%;
+  border-style: solid;
+  border-color: rgba(56, 189, 248, 0.18);
+}
+
+.floating-card {
+  position: relative;
+  z-index: 1;
+  animation: floatUpDown 5s ease-in-out infinite;
+}
+
+.credit-card {
+  border-radius: 1.2rem;
+  padding: 1rem 1.1rem;
+  background: linear-gradient(135deg, #22c55e, #0ea5e9);
+  color: #020617;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  box-shadow: 0 18px 45px rgba(34, 197, 94, 0.45);
+}
+
+.credit-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.75rem;
+}
+
+.credit-label {
+  font-weight: 500;
+}
+
+.credit-tag {
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  background-color: rgba(15, 23, 42, 0.08);
+  font-size: 0.7rem;
+}
+
+.credit-amount {
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.credit-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.75rem;
+}
+
+.credit-user {
+  color: #111827;
+}
+
+.credit-chip {
+  width: 1.9rem;
+  height: 1.2rem;
+  border-radius: 0.6rem;
+  background: linear-gradient(135deg, #facc15, #f97316);
+  box-shadow: 0 0 12px rgba(248, 250, 252, 0.7);
+}
+
+.course-chip {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+  background-color: rgba(15, 23, 42, 0.95);
+  color: #e5e7eb;
+  font-size: 0.78rem;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  box-shadow: 0 12px 35px rgba(15, 23, 42, 0.9);
+}
+
+.chip-top {
+  top: 14%;
+}
+
+.chip-bottom {
+  bottom: 10%;
+}
+
+.chip-title {
+  font-weight: 500;
+}
+
+.chip-meta {
+  color: #9ca3af;
+}
+
+@keyframes floatUpDown {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+

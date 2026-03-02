@@ -1,0 +1,104 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(15, 23, 42, 0.85); 
+  backdrop-filter: blur(6px); 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1100; 
+  padding: 20px; /* Margen de seguridad en móviles */
+}
+
+.skillbank-modal {
+  background-color: #1e293b;
+  width: 100%;
+  max-width: 500px; 
+  max-height: calc(100vh - 40px); /* Evita que pegue arriba/abajo */
+  border-radius: 1.25rem; 
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; 
+  border: 1px solid rgba(148, 163, 184, 0.1); 
+  animation: modalFadeUp 0.3s ease-out;
+}
+
+.modal-form-container {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Mantiene el scroll solo en el body */
+}
+
+.modal-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.modal-title {
+  margin: 0;
+  color: #f8fafc;
+  font-size: 1.25rem;
+}
+
+.modal-body {
+  padding: 1.5rem;
+  color: #cbd5e1;
+  overflow-y: auto; /* Scroll interno si el form es largo */
+}
+
+.form-control {
+  background-color: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 0.6rem;
+  color: #f8fafc;
+  padding: 0.7rem;
+}
+
+.form-control:focus {
+  background-color: #0f172a;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+  color: white;
+}
+
+.modal-footer {
+  padding: 1.25rem 1.5rem;
+  border-top: 1px solid rgba(148, 163, 184, 0.1);
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.btn-ghost {
+  color: #94a3b8;
+  border: 1px solid #334155;
+}
+
+.btn-ghost:hover {
+  background: rgb(75, 73, 73);
+  color: white;
+}
+
+@keyframes modalFadeUp {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Ajuste para la X de cerrar */
+.btn-close {
+  filter: invert(1) brightness(200%);
+}
+
+.form-control::placeholder {
+  color: #94a3b8 !important; 
+  opacity: 1; 
+}

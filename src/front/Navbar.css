@@ -1,0 +1,186 @@
+.app-root {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+}
+
+.btn {
+  border-radius: 999px !important;
+}
+
+.skillbank-navbar {
+  backdrop-filter: blur(12px);
+  background: radial-gradient(circle at top left, #111827, #020617) !important;
+  padding-block: 0.65rem;
+  transition: box-shadow 200ms ease, background-color 200ms ease,
+    transform 150ms ease;
+}
+
+.skillbank-navbar:hover {
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.45);
+}
+
+.brand-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.25rem 0.9rem;
+  border-radius: 999px;
+  background: linear-gradient(120deg, #22c55e, #0ea5e9);
+  color: #020617;
+  font-size: 0.95rem;
+  letter-spacing: 0.03em;
+  box-shadow: 0 10px 30px rgba(34, 197, 94, 0.28);
+}
+
+.brand-pill::before {
+  content: '';
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 999px;
+  background: radial-gradient(circle at 30% 30%, #bbf7d0, #16a34a);
+  box-shadow: 0 0 18px rgba(74, 222, 128, 0.85);
+}
+
+.navbar-animate {
+  animation: fadeDown 260ms ease-out;
+}
+
+@keyframes fadeDown {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.nav-link-underline {
+  position: relative;
+  padding-inline: 0.2rem;
+  color: #e5e7eb;
+}
+
+.nav-link-underline::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0.25rem;
+  width: 0%;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #22c55e, #0ea5e9);
+  transition: width 160ms ease-out;
+}
+
+.nav-link-underline:hover::after,
+.nav-link-underline.active::after {
+  width: 100%;
+}
+
+.search-wrapper {
+  align-items: center;
+}
+
+.search-input {
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.6);
+  background-color: rgba(15, 23, 42, 0.9);
+  color: #f9fafb !important;
+  caret-color: #f9fafb;
+  padding-inline: 0.9rem;
+  margin-right: 0.55rem;
+  box-shadow: 0 0 0 0 rgba(56, 189, 248, 0);
+  transition: box-shadow 180ms ease, border-color 160ms ease,
+    background-color 160ms ease, transform 120ms ease;
+}
+
+.search-input::placeholder {
+  color: rgba(148, 163, 184, 0.9);
+  font-size: 0.82rem;
+}
+
+.search-input:focus {
+  border-color: rgba(56, 189, 248, 0.9);
+  background-color: rgba(15, 23, 42, 1);
+  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.35);
+  transform: translateY(-0.5px);
+  color: #f9fafb !important;
+  caret-color: #f9fafb;
+}
+
+.search-button {
+  border-radius: 999px;
+  padding-inline: 0.9rem;
+  border-color: rgba(148, 163, 184, 0.7);
+  color: #e5e7eb;
+  transition: background-color 150ms ease, border-color 150ms ease,
+    transform 120ms ease, box-shadow 150ms ease;
+}
+
+.search-button:hover {
+  background-color: rgba(15, 23, 42, 1);
+  border-color: rgba(56, 189, 248, 0.9);
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.45);
+  transform: translateY(-1px);
+  color: #f9fafb;
+}
+
+.auth-buttons .btn {
+  transition: transform 120ms ease, box-shadow 150ms ease,
+    background-color 150ms ease, border-color 150ms ease;
+}
+
+.auth-buttons .btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.55);
+}
+
+.btn-ghost {
+  border-color: rgba(148, 163, 184, 0.7);
+  color: #e5e7eb;
+  background-color: transparent;
+}
+
+.btn-ghost:hover {
+  background-color: rgba(15, 23, 42, 1);
+  border-color: rgba(148, 163, 184, 1);
+  color: #f9fafb;
+}
+
+.btn-pill {
+  border-radius: 999px;
+  padding-inline: 1.1rem;
+  background: linear-gradient(120deg, #22c55e, #0ea5e9);
+  border: none;
+  color: #020617;
+}
+
+.btn-pill:hover {
+  filter: brightness(1.05);
+  color: #020617;
+}
+
+.skillbank-dropdown-item {
+  color: #f8fafc !important;
+  transition: all 0.2s ease-in-out;
+  padding: 8px 16px;
+}
+
+.skillbank-dropdown-item:hover {
+  background-color: rgba(148, 163, 184, 0.15) !important; 
+  color: #38bdf8 !important; 
+}
+
+
+.skillbank-dropdown-danger {
+  color: #ef4444 !important; 
+  transition: all 0.2s ease-in-out;
+  padding: 8px 16px;
+}
+
+.skillbank-dropdown-danger:hover {
+  background-color: rgba(239, 68, 68, 0.1) !important; 
+  color: #f87171 !important; 
+}
