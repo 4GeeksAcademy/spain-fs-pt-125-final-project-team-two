@@ -11,7 +11,10 @@ export const initialStore = () => {
 
     // Feed
     activities: [],
-    selectedActivity: null, // <--- Nueva pieza: guarda el curso que estamos editando
+    selectedActivity: null,
+
+    // Historial de clases
+    contactHistory: JSON.parse(localStorage.getItem("contactHistory")) || [],
 
     // UI global
     isPostModalOpen: false,
@@ -60,7 +63,15 @@ export default function storeReducer(store, action = {}) {
         activities: action.payload,
       };
 
-    case "SET_SELECTED_ACTIVITY": // <--- Acción para marcar qué curso editar
+    case "ADD_CONTACT_HISTORY": // <--- Nueva pieza: guarda las citas
+      const newHistory = [action.payload, ...store.contactHistory];
+      localStorage.setItem("contactHistory", JSON.stringify(newHistory));
+      return {
+        ...store,
+        contactHistory: newHistory,
+      };
+
+    case "SET_SELECTED_ACTIVITY":
       return {
         ...store,
         selectedActivity: action.payload,

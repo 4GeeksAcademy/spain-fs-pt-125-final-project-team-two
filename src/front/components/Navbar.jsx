@@ -18,7 +18,6 @@ export const Navbar = ({ onOpenRegister }) => {
           <span className="brand-pill">SkillBank</span>
         </Link>
 
-
         <button
           className="navbar-toggler"
           type="button"
